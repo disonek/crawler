@@ -38,7 +38,7 @@ enable_doxygen()
 include(cmake/StaticAnalyzers.cmake)
 
 option(BUILD_SHARED_LIBS "Enable compilation of shared libraries" OFF)
-option(ENABLE_TESTING "Enable Test Builds" ON)
+option(ENABLE_TESTING "Enable Test Builds" OFF)
 
 # Very basic PCH example
 option(ENABLE_PCH "Enable Precompiled Headers" OFF)
@@ -61,14 +61,16 @@ run_conan()
 
 find_package(Threads REQUIRED)
 
-if(ENABLE_TESTING)
-  enable_testing()
-  message("Building Tests. Be sure to check out test/constexpr_tests for constexpr testing")
-  add_subdirectory(test)
-endif()
+enable_testing()
+add_subdirectory(test)
+# if(ENABLE_TESTING)
+#   enable_testing()
+#   message("Building Tests. Be sure to check out test/constexpr_tests for constexpr testing")
+#   add_subdirectory(test)
+# endif()
 
 add_subdirectory(src/apps)
-add_subdirectory(src/ex_lib)
+add_subdirectory(src/mykindo)
 
 option(ENABLE_UNITY "Enable Unity builds of projects" OFF)
 if(ENABLE_UNITY)
