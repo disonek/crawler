@@ -12,15 +12,10 @@ macro(run_conan)
     bincrafters
     URL
     https://api.bintray.com/conan/bincrafters/public-conan)
-
-  conan_cmake_run(
-    REQUIRES
-    ${CONAN_EXTRA_REQUIRES}
-    gtest/1.10.0
-    # boost/1.71.0
-    OPTIONS
-    # gtest:build_gmock=False
-    ${CONAN_EXTRA_OPTIONS}
+    
+include(${CMAKE_BINARY_DIR}/conan_paths.cmake)
+conan_cmake_run(
+    CONANFILE conanfile.txt
     BASIC_SETUP
     CMAKE_TARGETS # individual targets to link to
     BUILD

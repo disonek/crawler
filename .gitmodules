@@ -1,0 +1,7 @@
+[submodule "external/imgui"]
+	path = external/imgui
+	url = https://github.com/disonek/imgui
+	branch = docking
+[submodule "external/imgui-sfml"]
+	path = external/imgui-sfml
+	url = https://github.com/disonek/imgui-sfml

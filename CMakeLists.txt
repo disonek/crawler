@@ -52,10 +52,6 @@ if(ENABLE_PCH)
     <utility>)
 endif()
 
-# Set up some extra Conan dependencies based on our needs before loading Conan
-set(CONAN_EXTRA_REQUIRES "")
-set(CONAN_EXTRA_OPTIONS "")
-
 include(cmake/Conan.cmake)
 run_conan()
 
@@ -69,8 +65,10 @@ add_subdirectory(test)
 #   add_subdirectory(test)
 # endif()
 
-add_subdirectory(src/apps)
-add_subdirectory(src/mykindo)
+add_subdirectory(external/imgui)
+add_subdirectory(external/imgui-sfml)
+add_subdirectory(src/apps/sandbox)
+add_subdirectory(src/disint)
 
 option(ENABLE_UNITY "Enable Unity builds of projects" OFF)
 if(ENABLE_UNITY)

@@ -1,0 +1,10 @@
+[generators]
+cmake_find_package
+cmake_paths
+
+[requires]
+sfml/2.5.1@bincrafters/stable
+gtest/1.10.0
+
+[options]
+[imports]

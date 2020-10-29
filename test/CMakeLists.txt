@@ -6,13 +6,18 @@ target_sources(
 
 target_include_directories(tests PRIVATE example utils)
 
+
+find_package(GTest REQUIRED)
 target_link_libraries(
   tests
   PRIVATE project_options
           project_warnings
-          CONAN_PKG::gtest
+          GTest::gtest_main
+          GTest::gmock_main
+          GTest::gmock
+          GTest::gtest
           Threads::Threads
-          mykindo)
+          disint)
 
 add_test(NAME tests COMMAND tests)
 
