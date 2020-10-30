@@ -13,7 +13,6 @@ macro(run_conan)
     URL
     https://api.bintray.com/conan/bincrafters/public-conan)
     
-include(${CMAKE_BINARY_DIR}/conan_paths.cmake)
 conan_cmake_run(
     CONANFILE conanfile.txt
     BASIC_SETUP

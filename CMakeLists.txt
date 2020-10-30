@@ -54,6 +54,7 @@ endif()
 
 include(cmake/Conan.cmake)
 run_conan()
+include(${CMAKE_BINARY_DIR}/conan_paths.cmake)
 
 find_package(Threads REQUIRED)
 
