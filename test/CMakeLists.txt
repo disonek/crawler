@@ -1,11 +1,7 @@
 add_executable(tests)
-target_sources(
-  tests
-  PRIVATE example/HelloTest.cpp
-          utils/Utils.hpp)
+target_sources(tests PRIVATE example/HelloTest.cpp utils/Utils.hpp)
 
 target_include_directories(tests PRIVATE example utils)
-
 
 find_package(GTest REQUIRED)
 target_link_libraries(
@@ -16,8 +12,7 @@ target_link_libraries(
           GTest::gmock_main
           GTest::gmock
           GTest::gtest
-          Threads::Threads
-          disint)
+          Threads::Threads)
 
 add_test(NAME tests COMMAND tests)
 

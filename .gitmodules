@@ -5,3 +5,9 @@
 [submodule "external/imgui-sfml"]
 	path = external/imgui-sfml
 	url = https://github.com/disonek/imgui-sfml
+[submodule "external/cxxopts"]
+	path = external/cxxopts
+	url = https://github.com/jarro2783/cxxopts
+[submodule "external/gumbo-query"]
+	path = external/gumbo-query
+	url = https://github.com/lazytiger/gumbo-query

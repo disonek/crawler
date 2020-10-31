@@ -7,7 +7,7 @@ include(cmake/PreventInSourceBuilds.cmake)
 
 # Link this 'library' to set the c++ standard / compile-time options requested
 add_library(project_options INTERFACE)
-target_compile_features(project_options INTERFACE cxx_std_17)
+target_compile_features(project_options INTERFACE cxx_std_20)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
   option(ENABLE_BUILD_WITH_TIME_TRACE "Enable -ftime-trace to generate time tracing .json files on clang" OFF)
@@ -60,16 +60,14 @@ find_package(Threads REQUIRED)
 
 enable_testing()
 add_subdirectory(test)
-# if(ENABLE_TESTING)
-#   enable_testing()
-#   message("Building Tests. Be sure to check out test/constexpr_tests for constexpr testing")
-#   add_subdirectory(test)
-# endif()
+# if(ENABLE_TESTING) enable_testing() message("Building Tests. Be sure to check out test/constexpr_tests for constexpr
+# testing") add_subdirectory(test) endif()
 
 add_subdirectory(external/imgui)
 add_subdirectory(external/imgui-sfml)
+add_subdirectory(external/cxxopts)
 add_subdirectory(src/apps/sandbox)
-add_subdirectory(src/disint)
+add_subdirectory(src/webcraw)
 
 option(ENABLE_UNITY "Enable Unity builds of projects" OFF)
 if(ENABLE_UNITY)

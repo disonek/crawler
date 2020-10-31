@@ -1,5 +1,5 @@
 add_executable(sandbox)
 
 target_sources(sandbox PRIVATE main.cpp)
- 
-target_link_libraries(sandbox PRIVATE project_options project_warnings disint imgui-sfml)
+
+target_link_libraries(sandbox PRIVATE project_options imgui-sfml)
