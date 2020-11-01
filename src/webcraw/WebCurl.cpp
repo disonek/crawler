@@ -21,6 +21,7 @@ std::string WebCurl::getPage(const std::string& url)
     curl_global_init(CURL_GLOBAL_DEFAULT);
     std::string readBuffer;
     curl = curl_easy_init();
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
     if(curl == nullptr)
         throw std::runtime_error("Failed to create CURL connection");
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());

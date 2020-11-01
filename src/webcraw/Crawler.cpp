@@ -22,7 +22,7 @@
 
 namespace webcrawler {
 Crawler::Crawler(size_t numThreads)
-    : pool(std::make_unique<ThreadPool>(numThreads, urlsInPool))
+    : pool(new ThreadPool(numThreads, urlsInPool))
 {
 }
 
@@ -73,26 +73,26 @@ void Crawler::stop()
     stopped = true;
 }
 
-void Crawler::extractLinks(GumboNode* node, std::vector<std::string>& foundLinks, const std::string& relativeToUrl)
-{
-    if(node->type != GUMBO_NODE_ELEMENT)
-        return;
-    GumboAttribute* href;
-    if(node->v.element.tag == GUMBO_TAG_A && (href = gumbo_get_attribute(&node->v.element.attributes, "href")))
-    {
-        // URL url(std::string(foundLink));
-        URL url;
-        url.setURL(std::string(href->value));
-        if(!url.isValidAbsolute())
-            url.toAbsolute(relativeToUrl);
-        foundLinks.push_back(url.toString());
-    }
-    GumboVector* children = &node->v.element.children;
-    for(unsigned int i = 0; i < children->length; ++i)
-    {
-        extractLinks(static_cast<GumboNode*>(children->data[i]), foundLinks, relativeToUrl);
-    }
-}
+// void Crawler::extractLinks(httpparser::Response response, std::vector<std::string>& foundLinks, const std::string& relativeToUrl)
+// {
+//     if(node->type != GUMBO_NODE_ELEMENT)
+//         return;
+//     GumboAttribute* href;
+//     if(node->v.element.tag == GUMBO_TAG_A && (href = gumbo_get_attribute(&node->v.element.attributes, "href")))
+//     {
+//         // URL url(std::string(foundLink));
+//         URL url;
+//         url.setURL(std::string(href->value));
+//         if(!url.isValidAbsolute())
+//             url.toAbsolute(relativeToUrl);
+//         foundLinks.push_back(url.toString());
+//     }
+//     GumboVector* children = &node->v.element.children;
+//     for(unsigned int i = 0; i < children->length; ++i)
+//     {
+//         extractLinks(static_cast<GumboNode*>(children->data[i]), foundLinks, relativeToUrl);
+//     }
+// }
 
 void Crawler::crawl(const std::string& url)
 {
@@ -101,7 +101,7 @@ void Crawler::crawl(const std::string& url)
     try
     {
         pageContent = WebCurl::getPage(url);
-        // spdlog::info("AN ERROR OCCURRED: {} {}", err.what(), url);
+        spdlog::info(": pageContent {}", pageContent);
     }
     catch(const std::runtime_error& err)
     {
@@ -110,9 +110,9 @@ void Crawler::crawl(const std::string& url)
     }
 
     std::vector<std::string> links;
-    GumboOutput* output = gumbo_parse(pageContent.c_str());
-    extractLinks(output->root, links, url);
-    gumbo_destroy_output(&kGumboDefaultOptions, output);
+    // GumboOutput* output = gumbo_parse(pageContent.c_str());
+    // extractLinks(output->root, links, url);
+    // gumbo_destroy_output(&kGumboDefaultOptions, output);
 
     for(const std::string& link : links)
     {
