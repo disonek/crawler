@@ -9,6 +9,7 @@ libcurl/7.73.0
 spdlog/1.8.0
 libmysqlclient/8.0.17
 openssl/1.1.1g
+cpr/1.5.0
 
 [options]
 [imports]

@@ -1,7 +1,7 @@
 find_package(CURL REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(MySQL REQUIRED)
-# find_package(gumbo-parser REQUIRED)
+find_package(cpr REQUIRED)
 
 file(GLOB HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
 file(GLOB SRC ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
@@ -17,6 +17,6 @@ target_link_libraries(
          MySQL::MySQL
          spdlog::spdlog
          Threads::Threads
-         httpparser
-        #  gumbo-parser::gumbo-parser
-         cxxopts)
+         cxxopts
+         cpr::cpr
+         )
