@@ -1,5 +1,4 @@
-#ifndef WCURL_H
-#define WCURL_H
+#pragma once
 
 #include <string>
 
@@ -8,4 +7,3 @@ public:
     static std::string getPage(const std::string &url);
 };
 
-#endif // WCURL_H

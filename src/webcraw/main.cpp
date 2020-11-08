@@ -1,5 +1,4 @@
-#include <curl/curl.h>
-#include <mysql.h>
+
 
 #include <algorithm>
 #include <cassert>
@@ -10,32 +9,6 @@
 
 #include "Crawler.hpp"
 #include "cxxopts.hpp"
-
-void search(std::string find)
-{
-    MYSQL* conn = mysql_init(nullptr);
-    std::string query;
-    if(!mysql_real_connect(conn, "localhost", "root", "Timjar00", "LINKDB", 0, nullptr, 0))
-    {
-        puts("No Database connection.");
-    }
-    else
-    {
-        std::cout << ("Enter a string to search for something specific(or leave blank to view full database): ");
-        std::getline(std::cin, find);
-        query = "SELECT * FROM links WHERE link LIKE '%" + find + "%'";
-        mysql_query(conn, query.c_str());
-        MYSQL_RES* res = mysql_use_result(conn);
-        puts("Your search returned these results: ");
-        MYSQL_ROW row;
-        while((row = mysql_fetch_row(res)) != nullptr)
-        {
-            printf("%s\n", row[0]);
-        }
-        mysql_free_result(res);
-        mysql_close(conn);
-    }
-}
 
 //#define _AGENT      "WebCrawlerBot"
 
@@ -75,7 +48,6 @@ int main(int argc, char* argv[])
     }
     if(!searchParam.empty())
     {
-        search(searchParam);
     }
     else if(!link.empty())
     {
@@ -84,6 +56,5 @@ int main(int argc, char* argv[])
 
     webcrawler::Crawler crawler(numThreads);
     crawler.start(url);
-    curl_global_cleanup(); // not thread safe, so only use in main
     return EXIT_SUCCESS;
 }

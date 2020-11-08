@@ -1,7 +1,5 @@
 #pragma once
 
-// #include <gumbo.h>
-
 #include <condition_variable>
 #include <memory>
 #include <mutex>
@@ -10,15 +8,13 @@
 #include <unordered_set>
 #include <vector>
 
-
-
-class ThreadPool;   
+class ThreadPool;
 
 namespace webcrawler {
 class Crawler
 {
 private:
-    // static void extractLinks(httpparser::Response response, std::vector<std::string>& foundLinks, const std::string& relativeToUrl);
+    static std::vector<std::string> extractLinks(std::string response, std::string url);
     void crawl(const std::string& url);
 
 public:

@@ -1,6 +1,8 @@
 #include "Crawler.hpp"
 
-#include <mysql.h>
+#include <libxml/HTMLparser.h>
+#include <libxml/uri.h>
+#include <libxml/xpath.h>
 #include <spdlog/spdlog.h>
 
 #include <chrono>
@@ -18,7 +20,6 @@
 #include "Threadpool.hpp"
 #include "Url.hpp"
 #include "Webcurl.hpp"
-
 
 namespace webcrawler {
 Crawler::Crawler(size_t numThreads)
@@ -73,26 +74,42 @@ void Crawler::stop()
     stopped = true;
 }
 
-// void Crawler::extractLinks(httpparser::Response response, std::vector<std::string>& foundLinks, const std::string& relativeToUrl)
-// {
-//     if(node->type != GUMBO_NODE_ELEMENT)
-//         return;
-//     GumboAttribute* href;
-//     if(node->v.element.tag == GUMBO_TAG_A && (href = gumbo_get_attribute(&node->v.element.attributes, "href")))
-//     {
-//         // URL url(std::string(foundLink));
-//         URL url;
-//         url.setURL(std::string(href->value));
-//         if(!url.isValidAbsolute())
-//             url.toAbsolute(relativeToUrl);
-//         foundLinks.push_back(url.toString());
-//     }
-//     GumboVector* children = &node->v.element.children;
-//     for(unsigned int i = 0; i < children->length; ++i)
-//     {
-//         extractLinks(static_cast<GumboNode*>(children->data[i]), foundLinks, relativeToUrl);
-//     }
-// }
+std::vector<std::string> Crawler::extractLinks(std::string response, std::string url)
+{
+    std::vector<std::string> foundLinks;
+    int opts = HTML_PARSE_NOBLANKS | HTML_PARSE_NOERROR | HTML_PARSE_NOWARNING | HTML_PARSE_NONET;
+
+    htmlDocPtr doc = htmlReadMemory(response.c_str(), response.size(), url.c_str(), NULL, opts);
+    if(!doc)
+        return foundLinks;
+
+    xmlChar* xpath = (xmlChar*)"//a/@href";
+    xmlXPathContextPtr context = xmlXPathNewContext(doc);
+    xmlXPathObjectPtr result = xmlXPathEvalExpression(xpath, context);
+    xmlXPathFreeContext(context);
+
+    xmlNodeSetPtr nodeset = result->nodesetval;
+    if(xmlXPathNodeSetIsEmpty(nodeset))
+    {
+        xmlXPathFreeObject(result);
+        return foundLinks;
+    }
+
+    for(auto i = 0; i < nodeset->nodeNr; i++)
+    {
+        const xmlNode* node = nodeset->nodeTab[i]->xmlChildrenNode;
+        xmlChar* href = xmlNodeListGetString(doc, node, 1);
+        href = xmlBuildURI(href, (xmlChar*)url.c_str());
+
+        char* foundLink = (char*)href;
+        if(foundLink != nullptr)
+            foundLinks.push_back(std::string{foundLink});
+        xmlFree(foundLink);
+    }
+    xmlXPathFreeObject(result);
+    xmlFreeDoc(doc);
+    return foundLinks;
+}
 
 void Crawler::crawl(const std::string& url)
 {
@@ -101,7 +118,7 @@ void Crawler::crawl(const std::string& url)
     try
     {
         pageContent = WebCurl::getPage(url);
-        spdlog::info(": pageContent {}", pageContent);
+        // spdlog::info(": pageContent {}", pageContent);
     }
     catch(const std::runtime_error& err)
     {
@@ -109,15 +126,12 @@ void Crawler::crawl(const std::string& url)
         return; // change this is the future
     }
 
-    std::vector<std::string> links;
-    // GumboOutput* output = gumbo_parse(pageContent.c_str());
-    // extractLinks(output->root, links, url);
-    // gumbo_destroy_output(&kGumboDefaultOptions, output);
+    std::vector<std::string> links = extractLinks(pageContent, url);
 
-    for(const std::string& link : links)
-    {
-        spdlog::info("{}", link);
-    }
+    // for(const std::string& link : links)
+    // {
+    //     spdlog::info("{}", link);
+    // }
 
     for(const std::string& link : links)
     {
