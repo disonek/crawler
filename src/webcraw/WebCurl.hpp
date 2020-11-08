@@ -1,9 +1,11 @@
 #pragma once
 
+#include <cpr/cpr.h>
+
 #include <string>
 
-class WebCurl {
+class WebCurl
+{
 public:
-    static std::string getPage(const std::string &url);
+    static cpr::Response getPage(const std::string& url);
 };
-

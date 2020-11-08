@@ -114,39 +114,22 @@ std::vector<std::string> Crawler::extractLinks(std::string response, std::string
 void Crawler::crawl(const std::string& url)
 {
     spdlog::info("Crawling {}", url);
-    std::string pageContent;
-    try
+    auto pageContent = WebCurl::getPage(url);
+    if(200 != pageContent.status_code)
     {
-        pageContent = WebCurl::getPage(url);
-        // spdlog::info(": pageContent {}", pageContent);
-    }
-    catch(const std::runtime_error& err)
-    {
-        // spdlog::info("AN ERROR OCCURRED: {} {}", err.what(), url);
-        return; // change this is the future
+        return;
     }
 
-    std::vector<std::string> links = extractLinks(pageContent, url);
-
-    // for(const std::string& link : links)
-    // {
-    //     spdlog::info("{}", link);
-    // }
-
+    std::vector<std::string> links = extractLinks(pageContent.text, url);
     for(const std::string& link : links)
     {
-        // std::string query;
         std::lock_guard<std::mutex> foundLock(found_mut);
         if(foundURLs.find(link) == foundURLs.end())
         {
-            // add the url to foundurls, so the crawler won't download the page again
             std::lock_guard<std::mutex> poolLock(url_mut);
             foundURLs.insert(link);
             urlPool.push(link);
-            // query = "INSERT INTO links VALUES('"+ link +"')";
-            // mysql_query(conn,query.c_str());
         }
     }
-    // mysql_close(conn);
 }
 } // namespace webcrawler
