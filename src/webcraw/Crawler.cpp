@@ -5,78 +5,34 @@
 #include <libxml/xpath.h>
 #include <spdlog/spdlog.h>
 
-#include <chrono>
-#include <condition_variable>
-#include <functional>
 #include <future>
-#include <iostream>
-#include <regex>
-#include <sstream>
-#include <stdexcept>
-#include <string>
-#include <thread>
-#include <vector>
 
-#include "Threadpool.hpp"
-#include "Url.hpp"
 #include "Webcurl.hpp"
 
 namespace webcrawler {
-Crawler::Crawler(size_t numThreads)
-    : pool(new ThreadPool(numThreads, urlsInPool))
-{
-}
-
-Crawler::~Crawler()
-{
-    stopped = true;
-    urlsInPool.notify_all();
-}
 
 void Crawler::start(const std::string& startURL)
 {
-    pool->enqueue([&] {
-        // task
-        crawl(startURL);
-    });
-    while(!stopped)
+    spdlog::info("Crawling {}", startURL);
+    auto pageContent = WebCurl::getPage(startURL);
+    if(200 != pageContent.status_code)
     {
-        std::unique_lock<std::mutex> poolLock(url_mut);
-        // check if the links pool is empty, if it is, wait for condition_variable, until it's not
-        do
-        {
-            urlsInPool.wait(poolLock);
-        } while(urlPool.empty() && !stopped);
-        if(stopped)
-        {
-            poolLock.unlock();
-            return;
-        }
-        // get amount of urls equal to amount of free workers and amount of links
-        size_t workersFree = pool->getAmountFreeWorkers();
-        // spdlog::info("Workers free: {}", workersFree);
-        for(size_t i = 0; i < workersFree && i < urlPool.size(); i++)
-        {
-            // get an url to crawl
-            std::string nextURL = urlPool.front();
-            urlPool.pop();
-            // crawl the next url
-            pool->enqueue([&] {
-                // task
-                crawl(nextURL);
-            });
-        }
+        return;
+    }
+
+    std::unordered_set<std::string> links = extractLinks(pageContent.text, startURL);
+    std::lock_guard<std::mutex> lock(mutex);
+    for(auto link : links)
+    {
+        spdlog::error("link {}", link);
+        if(link != startURL)
+            requests.push(std::move(link));
     }
 }
 
-void Crawler::stop()
+std::unordered_set<std::string> Crawler::extractLinks(std::string response, std::string url)
 {
-    stopped = true;
-}
-
-std::vector<std::string> Crawler::extractLinks(std::string response, std::string url)
-{
-    std::vector<std::string> foundLinks;
+    std::unordered_set<std::string> foundLinks;
     int opts = HTML_PARSE_NOBLANKS | HTML_PARSE_NOERROR | HTML_PARSE_NOWARNING | HTML_PARSE_NONET;
 
     htmlDocPtr doc = htmlReadMemory(response.c_str(), response.size(), url.c_str(), NULL, opts);
@@ -103,7 +59,7 @@ std::vector<std::string> Crawler::extractLinks(std::string response, std::string
 
         char* foundLink = (char*)href;
         if(foundLink != nullptr)
-            foundLinks.push_back(std::string{foundLink});
+            foundLinks.emplace(std::string{foundLink});
         xmlFree(foundLink);
     }
     xmlXPathFreeObject(result);
@@ -111,25 +67,28 @@ std::vector<std::string> Crawler::extractLinks(std::string response, std::string
     return foundLinks;
 }
 
-void Crawler::crawl(const std::string& url)
+void Crawler::crawl()
 {
-    spdlog::info("Crawling {}", url);
-    auto pageContent = WebCurl::getPage(url);
-    if(200 != pageContent.status_code)
+    std::lock_guard<std::mutex> lock(mutex);
+    while(!requests.empty())
     {
-        return;
-    }
+        spdlog::info("Crawling {}", requests.front().c_str());
+        auto fut = std::async(WebCurl::getPage, requests.front());
+        cpr::Response response = fut.get();
 
-    std::vector<std::string> links = extractLinks(pageContent.text, url);
-    for(const std::string& link : links)
-    {
-        std::lock_guard<std::mutex> foundLock(found_mut);
-        if(foundURLs.find(link) == foundURLs.end())
+        if(200 != response.status_code)
         {
-            std::lock_guard<std::mutex> poolLock(url_mut);
-            foundURLs.insert(link);
-            urlPool.push(link);
+            return;
         }
+
+        std::unordered_set<std::string> links = extractLinks(response.text, requests.front());
+
+        for(auto link : links)
+        {
+            spdlog::error("link {}", link);
+        }
+
+        requests.pop();
     }
 }
 } // namespace webcrawler

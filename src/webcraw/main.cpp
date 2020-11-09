@@ -29,7 +29,8 @@ int main(int argc, char* argv[])
         url = link;
     }
 
-    webcrawler::Crawler crawler(numThreads);
+    auto crawler = webcrawler::Crawler{};
     crawler.start(url);
+    crawler.crawl();
     return EXIT_SUCCESS;
 }

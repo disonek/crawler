@@ -6,7 +6,6 @@ cmake_paths
 sfml/2.5.1@bincrafters/stable
 gtest/1.10.0
 spdlog/1.8.0
-openssl/1.1.1g
 cpr/1.5.0
 libxml2/2.9.10
 
