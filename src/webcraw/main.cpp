@@ -3,10 +3,12 @@
 #include <string>
 
 #include "Crawler.hpp"
+#include "Timer.hpp"
 #include "cxxopts.hpp"
 
 int main(int argc, char* argv[])
 {
+    Timer timer("main timer");
     int numThreads = 4;
     std::string url;
     bool needHelp = false;
@@ -30,7 +32,8 @@ int main(int argc, char* argv[])
     }
 
     auto crawler = webcrawler::Crawler{};
-    crawler.start(url);
-    crawler.crawl();
-    return EXIT_SUCCESS;
+    std::set<std::string> initialRequests = crawler.getLinksFromUrl(url);
+    crawler.crawl(initialRequests);
+
+    return 0;
 }

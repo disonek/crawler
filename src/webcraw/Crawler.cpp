@@ -5,34 +5,28 @@
 #include <libxml/xpath.h>
 #include <spdlog/spdlog.h>
 
+#include <algorithm>
 #include <future>
 
 #include "Webcurl.hpp"
 
 namespace webcrawler {
 
-void Crawler::start(const std::string& startURL)
+std::set<std::string> Crawler::getLinksFromUrl(const std::string startURL)
 {
-    spdlog::info("Crawling {}", startURL);
+    // spdlog::info("Crawling {}", startURL);
     auto pageContent = WebCurl::getPage(startURL);
     if(200 != pageContent.status_code)
     {
-        return;
+        return {};
     }
 
-    std::unordered_set<std::string> links = extractLinks(pageContent.text, startURL);
-    std::lock_guard<std::mutex> lock(mutex);
-    for(auto link : links)
-    {
-        spdlog::error("link {}", link);
-        if(link != startURL)
-            requests.push(std::move(link));
-    }
+    return extractLinks(pageContent.text, startURL);
 }
 
-std::unordered_set<std::string> Crawler::extractLinks(std::string response, std::string url)
+std::set<std::string> Crawler::extractLinks(std::string response, std::string url)
 {
-    std::unordered_set<std::string> foundLinks;
+    std::set<std::string> foundLinks;
     int opts = HTML_PARSE_NOBLANKS | HTML_PARSE_NOERROR | HTML_PARSE_NOWARNING | HTML_PARSE_NONET;
 
     htmlDocPtr doc = htmlReadMemory(response.c_str(), response.size(), url.c_str(), NULL, opts);
@@ -67,28 +61,44 @@ std::unordered_set<std::string> Crawler::extractLinks(std::string response, std:
     return foundLinks;
 }
 
-void Crawler::crawl()
+void Crawler::crawl(std::set<std::string> initialRequests)
 {
-    std::lock_guard<std::mutex> lock(mutex);
-    while(!requests.empty())
+    std::copy(initialRequests.begin(), initialRequests.end(), std::back_inserter(requestsToDo));
+
+    while(!requestsToDo.empty())
     {
-        spdlog::info("Crawling {}", requests.front().c_str());
-        auto fut = std::async(WebCurl::getPage, requests.front());
-        cpr::Response response = fut.get();
-
-        if(200 != response.status_code)
+        std::vector<std::future<std::set<std::string>>> futures;
+        for(int i = 0; i < 15; i++)
         {
-            return;
+            if(!requestsToDo.empty())
+            {
+                futures.push_back(std::async(&Crawler::getLinksFromUrl, this, requestsToDo.front()));
+                requestsDone.insert(requestsToDo.front());
+                requestsToDo.pop_front();
+            }
         }
 
-        std::unordered_set<std::string> links = extractLinks(response.text, requests.front());
-
-        for(auto link : links)
+        for(auto& future : futures)
         {
-            spdlog::error("link {}", link);
+            std::set<std::string> r1 = future.get();
         }
 
-        requests.pop();
+        // for(auto& future : futures)
+        // {
+        //     std::set<std::string> diff;
+        //     std::set<std::string> r1 = future.get();
+        //     std::set_difference(
+        //         r1.begin(), r1.end(), requestsDone.begin(), requestsDone.end(), std::back_inserter(requestsToDo));
+        // }
+
+        spdlog::info("requestsToDo size= {}", requestsToDo.size());
+        spdlog::info("requestsDone size= {}", requestsDone.size());
     }
+
+    for(auto request : requestsToDo)
+        spdlog::info("requestsToDo {}", request.c_str());
+
+    for(auto request : requestsDone)
+        spdlog::info("requestsDone {}", request.c_str()); /* code */
 }
 } // namespace webcrawler

@@ -2,7 +2,7 @@ find_package(spdlog REQUIRED)
 find_package(cpr REQUIRED)
 find_package(LibXml2 REQUIRED)
 
-file(GLOB HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
+file(GLOB HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/*.hpp)
 file(GLOB SRC ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 
 add_executable(webcrawl ${SRC} ${HEADERS})
