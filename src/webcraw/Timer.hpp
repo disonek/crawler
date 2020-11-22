@@ -16,7 +16,7 @@ public:
     ~Timer()
     {
         double final = timeElapsed() * 0.001;
-        spdlog::info("{} TIME ELAPSED= {}", name, final);
+        spdlog::info("{} time elapsed = {}", name, final);
     }
 
     uint32_t timeElapsed()
