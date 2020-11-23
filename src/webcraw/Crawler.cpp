@@ -21,7 +21,7 @@ Crawler::Crawler(uint8_t numThreads)
 
 std::set<std::string> Crawler::getLinksFromUrl(const std::string url)
 {
-    utils::Instrumentor::scope(url);
+    InstrumentationTimer timer(__func__);
     auto pageContent = WebCurl::getPage(url);
     if(200 != pageContent.status_code)
     {
@@ -33,8 +33,8 @@ std::set<std::string> Crawler::getLinksFromUrl(const std::string url)
 
 std::set<std::string> Crawler::extractLinks(std::string response, std::string url)
 {
-    utils::Instrumentor::scope(__func__);
-    std::cout << "this_thread is " << std::hash<std::thread::id>{}(std::this_thread::get_id()) << "\n";
+    // std::cout << "this_thread is " << std::hash<std::thread::id>{}(std::this_thread::get_id()) << "\n";
+    InstrumentationTimer timer(__func__);
     std::set<std::string> foundLinks;
     int opts = HTML_PARSE_NOBLANKS | HTML_PARSE_NOERROR | HTML_PARSE_NOWARNING | HTML_PARSE_NONET;
 
@@ -100,14 +100,14 @@ void Crawler::crawl(std::set<std::string> initialRequests)
         //         r1.begin(), r1.end(), requestsDone.begin(), requestsDone.end(), std::back_inserter(requestsToDo));
         // }
 
-        // spdlog::info("requestsToDo size= {}", requestsToDo.size());
-        // spdlog::info("requestsDone size= {}", requestsDone.size());
+        spdlog::info("requestsToDo size= {}", requestsToDo.size());
+        spdlog::info("requestsDone size= {}", requestsDone.size());
     }
 
-    for(auto request : requestsToDo)
-        spdlog::info("requestsToDo {}", request.c_str());
-    for(auto request : requestsDone)
-        spdlog::info("requestsDone {}", request.c_str());
+    // for(auto request : requestsToDo)
+    //     spdlog::info("requestsToDo {}", request.c_str());
+    // for(auto request : requestsDone)
+    //     spdlog::info("requestsDone {}", request.c_str());
 }
 
 } // namespace webcrawler

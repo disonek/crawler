@@ -2,13 +2,16 @@ find_package(spdlog REQUIRED)
 find_package(cpr REQUIRED)
 find_package(LibXml2 REQUIRED)
 
-file(GLOB HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/*.hpp)
-file(GLOB SRC ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 
-add_executable(webcrawl ${SRC} ${HEADERS})
+add_library(webcrawl
+  Crawler.cpp
+  Crawler.hpp
+  Timer.hpp
+  Trace.hpp
+  WebCurl.cpp
+  WebCurl.hpp)
 
-install(TARGETS webcrawl DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
-
+target_include_directories(webcrawl PUBLIC .)
 
 target_link_libraries(
   webcrawl

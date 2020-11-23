@@ -12,7 +12,21 @@ target_link_libraries(
           GTest::gmock_main
           GTest::gmock
           GTest::gtest
-          Threads::Threads)
+          Threads::Threads
+          )
+
+find_package(benchmark REQUIRED)
+add_executable(bench)
+target_sources(bench PRIVATE "benchmark/BasicCrawl.cpp")
+
+target_link_libraries(bench
+  PRIVATE project_options
+          project_warnings
+          benchmark::benchmark
+          Threads::Threads
+          webcrawl)
+
+
 
 add_test(NAME tests COMMAND tests)
 
