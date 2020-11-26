@@ -1,7 +1,7 @@
 add_executable(tests)
-target_sources(tests PRIVATE example/HelloTest.cpp utils/Utils.hpp)
+target_sources(tests PRIVATE example/HelloTest.cpp)
 
-target_include_directories(tests PRIVATE example utils)
+target_include_directories(tests PRIVATE example)
 
 find_package(GTest REQUIRED)
 target_link_libraries(

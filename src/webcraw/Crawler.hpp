@@ -18,9 +18,9 @@ public:
     Crawler(uint8_t numThreads);
 
 private:
-    uint8_t numThreads;
     std::set<std::string> extractLinks(std::string response, std::string url);
-    std::mutex mutex;
+
+    uint8_t numThreads;
     std::deque<std::string> requestsToDo;
     std::set<std::string> requestsDone;
 };

@@ -10,7 +10,7 @@
 int main(int argc, char* argv[])
 {
     Timer timer(__func__);
-    Instrumentor::Get().BeginSession("Session Name");
+    utils::Instrumentor::get().beginSession("Session Name");
     uint8_t numThreads = 15;
     std::string url;
     bool needHelp = false;
@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
     spdlog::info("Crawl");
     crawler.crawl(initialRequests);
 
-    Instrumentor::Get().EndSession();
+    utils::Instrumentor::get().endSession();
     return 0;
 }
 

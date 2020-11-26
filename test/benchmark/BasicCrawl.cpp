@@ -1,13 +1,12 @@
 #include <benchmark/benchmark.h>
+#include <spdlog/spdlog.h>
 
 #include <string>
 
 #include "Crawler.hpp"
-#include "Timer.hpp"
 
 static void basicCrawl(benchmark::State& state)
 {
-    Timer timer(__func__);
     for(auto _ : state)
     {
         uint64_t numThreads = state.range(0);
