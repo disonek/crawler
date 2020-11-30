@@ -3,14 +3,14 @@
 #include <string>
 
 #include "Crawler.hpp"
-#include "Timer.hpp"
-#include "Trace.hpp"
+#include "ScopedTimer.hpp"
+#include "TraceTimer.hpp"
 #include "cxxopts.hpp"
 
 int main(int argc, char* argv[])
 {
-    Timer timer(__func__);
-    utils::Instrumentor::get().beginSession("Session Name");
+    utils::ScopedTimer timer(__func__);
+    utils::Trace::get().beginSession("Session Name");
     uint8_t numThreads = 15;
     std::string url;
     bool needHelp = false;
@@ -35,6 +35,7 @@ int main(int argc, char* argv[])
     else
     {
         url = "https://www.google.com/doodles";
+        // url = "https://www.google.com/search?q=starcraft";
     }
 
     auto crawler = webcrawler::Crawler{numThreads};
@@ -46,7 +47,7 @@ int main(int argc, char* argv[])
     spdlog::info("Crawl");
     crawler.crawl(initialRequests);
 
-    utils::Instrumentor::get().endSession();
+    utils::Trace::get().endSession();
     return 0;
 }
 

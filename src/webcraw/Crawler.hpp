@@ -7,7 +7,7 @@
 #include <string>
 #include <unordered_set>
 
-#include "Trace.hpp"
+#include "TraceTimer.hpp"
 
 namespace webcrawler {
 class Crawler

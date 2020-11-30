@@ -1,34 +1,32 @@
+#pragma once
 
 #include <spdlog/spdlog.h>
 
-#include <chrono>
-#include <string>
+#include "Timer.hpp"
 
-class Timer
+namespace utils {
+
+class ScopedTimer : public Timer
 {
 public:
-    Timer(std::string name)
-        : name{name}
+    ScopedTimer(const char* name)
+        : Timer{name}
     {
-        startTime = std::chrono::high_resolution_clock::now();
     }
 
-    ~Timer()
+    ~ScopedTimer() override
     {
         double final = timeElapsed() * 0.001;
         spdlog::info("{} time elapsed = {}", name, final);
     }
 
-    uint32_t timeElapsed()
+    uint32_t timeElapsed() override
     {
         auto currentTime = std::chrono::high_resolution_clock::now();
         auto elapsedTime = std::chrono::time_point_cast<std::chrono::milliseconds>(currentTime).time_since_epoch() -
-                           std::chrono::time_point_cast<std::chrono::milliseconds>(startTime).time_since_epoch();
+                           std::chrono::time_point_cast<std::chrono::milliseconds>(startTimepoint).time_since_epoch();
 
         return static_cast<uint32_t>(elapsedTime.count());
     }
-
-private:
-    const std::string name;
-    std::chrono::time_point<std::chrono::high_resolution_clock> startTime;
 };
+} // namespace utils

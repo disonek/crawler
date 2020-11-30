@@ -6,12 +6,16 @@ find_package(LibXml2 REQUIRED)
 add_library(webcrawl
   Crawler.cpp
   Crawler.hpp
-  Timer.hpp
-  Trace.hpp
   WebCurl.cpp
-  WebCurl.hpp)
+  WebCurl.hpp
+  debug_tools/Timer.hpp
+  debug_tools/Trace.hpp
+  debug_tools/TraceTimer.hpp
+  debug_tools/ScopedTimer.hpp
+)
 
-target_include_directories(webcrawl PUBLIC .)
+target_include_directories(webcrawl 
+  PUBLIC . debug_tools)
 
 target_link_libraries(
   webcrawl
