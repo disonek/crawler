@@ -1,6 +1,7 @@
 find_package(spdlog REQUIRED)
 find_package(cpr REQUIRED)
 find_package(LibXml2 REQUIRED)
+find_package(EnTT REQUIRED)
 
 
 add_library(webcrawl
@@ -12,6 +13,7 @@ add_library(webcrawl
   debug_tools/Trace.hpp
   debug_tools/TraceTimer.hpp
   debug_tools/ScopedTimer.hpp
+  debug_tools/ScopedTimer.cpp
 )
 
 target_include_directories(webcrawl 
@@ -25,4 +27,5 @@ target_link_libraries(
          cxxopts::cxxopts
          cpr::cpr
          LibXml2::LibXml2
+         EnTT::EnTT
          )

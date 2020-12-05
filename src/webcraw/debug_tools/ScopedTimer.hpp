@@ -2,22 +2,44 @@
 
 #include <spdlog/spdlog.h>
 
+#include <entt/entt.hpp>
+
 #include "Timer.hpp"
 
 namespace utils {
 
+using Duration = double;
+using Tag = std::string;
+
+class Registry
+{
+public:
+    entt::registry& get()
+    {
+        return registry;
+    }
+
+private:
+    static entt::registry registry;
+};
+
 class ScopedTimer : public Timer
 {
 public:
-    ScopedTimer(const char* name)
+    ScopedTimer(const char* name, Tag tag)
         : Timer{name}
+        , tag{tag}
     {
     }
 
     ~ScopedTimer() override
     {
         double final = timeElapsed() * 0.001;
-        spdlog::info("{} time elapsed = {}", name, final);
+        // spdlog::info("{} time elapsed = {}", name, final);
+        Registry reg{};
+        auto entity = reg.get().create();
+        reg.get().emplace<Duration>(entity, final);
+        reg.get().emplace<Tag>(entity, tag);
     }
 
     uint32_t timeElapsed() override
@@ -28,5 +50,8 @@ public:
 
         return static_cast<uint32_t>(elapsedTime.count());
     }
+
+private:
+    Tag tag;
 };
 } // namespace utils

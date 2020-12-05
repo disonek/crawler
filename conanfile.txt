@@ -9,6 +9,7 @@ spdlog/1.8.0
 cpr/1.5.0
 libxml2/2.9.10
 benchmark/1.5.2
+entt/3.5.2
 
 [options]
 [imports]

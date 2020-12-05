@@ -7,6 +7,7 @@
 
 #include <future>
 
+#include "ScopedTimer.hpp"
 #include "Webcurl.hpp"
 
 namespace webcrawler {
@@ -30,6 +31,7 @@ std::set<std::string> Crawler::getLinksFromUrl(const std::string url)
 std::set<std::string> Crawler::extractLinks(std::string response, std::string url)
 {
     utils::TraceTimer timer(url.c_str());
+    utils::ScopedTimer st(__func__, __func__);
     std::set<std::string> foundLinks;
     int opts = HTML_PARSE_NOBLANKS | HTML_PARSE_NOERROR | HTML_PARSE_NOWARNING | HTML_PARSE_NONET;
 
