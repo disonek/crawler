@@ -10,6 +10,9 @@ cpr/1.5.0
 libxml2/2.9.10
 benchmark/1.5.2
 entt/3.5.2
+glew/2.1.0
+glfw/3.3.2
 
 [options]
+glew:shared=False
 [imports]
