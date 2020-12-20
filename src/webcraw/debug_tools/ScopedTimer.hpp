@@ -14,10 +14,7 @@ using Tag = std::string;
 class Registry
 {
 public:
-    entt::registry& get()
-    {
-        return registry;
-    }
+    entt::registry& get();
 
 private:
     static entt::registry registry;
@@ -26,32 +23,30 @@ private:
 class ScopedTimer : public Timer
 {
 public:
-    ScopedTimer(const char* name, Tag tag)
-        : Timer{name}
-        , tag{tag}
-    {
-    }
-
-    ~ScopedTimer() override
-    {
-        double final = timeElapsed() * 0.001;
-        // spdlog::info("{} time elapsed = {}", name, final);
-        Registry reg{};
-        auto entity = reg.get().create();
-        reg.get().emplace<Duration>(entity, final);
-        reg.get().emplace<Tag>(entity, tag);
-    }
-
-    uint32_t timeElapsed() override
-    {
-        auto currentTime = std::chrono::high_resolution_clock::now();
-        auto elapsedTime = std::chrono::time_point_cast<std::chrono::milliseconds>(currentTime).time_since_epoch() -
-                           std::chrono::time_point_cast<std::chrono::milliseconds>(startTimepoint).time_since_epoch();
-
-        return static_cast<uint32_t>(elapsedTime.count());
-    }
+    ScopedTimer(const char* name, Tag tag);
+    ~ScopedTimer() override;
+    uint32_t timeElapsed() override;
 
 private:
     Tag tag;
 };
+
+static void registryExampleUsage()
+{
+    double getPageDuraton{};
+    double parseDuration{};
+
+    utils::Registry reg;
+    reg.get().view<utils::Duration, utils::Tag>().each(
+        [&getPageDuraton, &parseDuration](auto entity, auto& duration, auto& tag) {
+            spdlog::warn("{} duraton = {}", tag, duration);
+            if(tag == "getPage")
+                getPageDuraton += duration;
+            if(tag == "extractLinks")
+                parseDuration += duration;
+        });
+
+    spdlog::error("Downloat time = {}", getPageDuraton);
+    spdlog::error("Parse time = {}", parseDuration);
+}
 } // namespace utils

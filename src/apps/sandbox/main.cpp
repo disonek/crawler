@@ -1,9 +1,9 @@
 #include "ImGuiLayer.hpp"
 #include "MainLoop.hpp"
 
-
-int main(int, char**)
+int main(int argc, char* argv[])
 {
-    img::ImGuiLayer imGuiLayer{};
-    imGuiLayer.run();
+    mainLoop(argc, argv);
+    // img::ImGuiLayer imGuiLayer{};
+    // imGuiLayer.run();
 }
