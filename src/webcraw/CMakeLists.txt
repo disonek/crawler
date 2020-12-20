@@ -11,6 +11,9 @@ add_library(webcrawl
   Crawler.hpp
   WebCurl.cpp
   WebCurl.hpp
+  ImGuiLayer.hpp
+  ImGuiLayer.cpp
+  MainLoop.hpp
   debug_tools/Timer.hpp
   debug_tools/Trace.hpp
   debug_tools/TraceTimer.hpp
