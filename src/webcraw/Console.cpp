@@ -1,6 +1,8 @@
 #include <spdlog/spdlog.h>
 
-static void consoleExample(char* argv[])
+#include "cxxopts.hpp"
+
+static void consoleExample(int argc, char* argv[])
 {
     uint8_t numThreads = 15;
     std::string url;

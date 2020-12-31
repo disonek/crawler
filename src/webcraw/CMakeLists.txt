@@ -9,11 +9,11 @@ find_package(GLEW REQUIRED)
 add_library(webcrawl
   Crawler.cpp
   Crawler.hpp
+  Console.cpp
   WebCurl.cpp
   WebCurl.hpp
-  ImGuiLayer.hpp
-  ImGuiLayer.cpp
-  MainLoop.hpp
+  imgui/ImGuiLayer.hpp
+  imgui/ImGuiLayer.cpp
   debug_tools/Timer.hpp
   debug_tools/Trace.hpp
   debug_tools/TraceTimer.hpp

@@ -69,6 +69,23 @@ ImGuiLayer::~ImGuiLayer()
     glfwTerminate();
 }
 
+void ImGuiLayer::log(std::string logMessage)
+{
+    bool p_open{true};
+    // For the demo: add a debug button _BEFORE_ the normal log window contents
+    // We take advantage of a rarely used feature: multiple calls to Begin()/End() are appending to the _same_ window.
+    // Most of the contents of the window will be added by the log.Draw() call.
+    ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
+    ImGui::Begin("Example: Log", &p_open);
+    // if(ImGui::SmallButton("[Debug] Add 5 entries"))
+    // {
+    logger.AddLog("%s\n", logMessage.c_str());
+    // }
+    ImGui::End();
+
+    // Actually call in the regular Log helper (which will Begin() into the same window as we just did)
+    logger.Draw("Example: Log", &p_open);
+}
 void ImGuiLayer::run()
 {
     while(!glfwWindowShouldClose(window))
@@ -89,6 +106,9 @@ void ImGuiLayer::run()
         ImGui::Text("Renderer2D Stats:");
         ImGui::End();
 
+        for(auto message : logMessages)
+            log(message);
+
         // Render dear imgui into screen
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -106,6 +126,11 @@ void ImGuiLayer::run()
         glViewport(0, 0, screenWidth, screenHeight);
         glfwSwapBuffers(window);
     }
+}
+
+void ImGuiLayer::setLogMessages(std::set<std::string> logMess)
+{
+    logMessages = logMess;
 }
 
 void ImGuiLayer::createDockspace(bool& p_open)
