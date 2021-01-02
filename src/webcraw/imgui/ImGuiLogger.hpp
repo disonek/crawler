@@ -49,6 +49,12 @@ struct ImGuiAppLog
             ImGui::EndPopup();
         }
 
+        static char str0[128] = "Hello, world!";
+        ImGui::InputText("input text", str0, IM_ARRAYSIZE(str0));
+        if(ImGui::SmallButton("Crawl"))
+        {
+        }
+
         // Main window
         if(ImGui::Button("Options"))
             ImGui::OpenPopup("Options");

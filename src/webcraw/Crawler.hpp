@@ -13,8 +13,9 @@ namespace webcrawler {
 class Crawler
 {
 public:
+    static std::set<std::string> CrawlerThread(std::string url);
     std::set<std::string> getLinksFromUrl(const std::string startURL);
-    void crawl(std::set<std::string> initialRequests);
+    std::set<std::string> crawl(std::set<std::string> initialRequests);
     Crawler(uint8_t numThreads);
 
 private:

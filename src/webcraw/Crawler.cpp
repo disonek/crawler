@@ -11,6 +11,18 @@
 #include "Webcurl.hpp"
 
 namespace webcrawler {
+std::set<std::string> Crawler::CrawlerThread(std::string url)
+{
+    utils::ScopedTimer timer(__func__, "main");
+    utils::Trace::get().beginSession("Session Name");
+    uint8_t numThreads = 15;
+    auto crawler = webcrawler::Crawler{numThreads};
+    std::set<std::string> initialRequests = crawler.getLinksFromUrl(url);
+    auto result = crawler.crawl(initialRequests);
+
+    utils::Trace::get().endSession();
+    return result;
+}
 
 Crawler::Crawler(uint8_t numThreads)
     : numThreads{numThreads}
@@ -67,8 +79,10 @@ std::set<std::string> Crawler::extractLinks(std::string response, std::string ur
     return foundLinks;
 }
 
-void Crawler::crawl(std::set<std::string> initialRequests)
+std::set<std::string> Crawler::crawl(std::set<std::string> initialRequests)
 {
+    std::set<std::string> res;
+
     std::copy(initialRequests.begin(), initialRequests.end(), std::back_inserter(requestsToDo));
 
     while(!requestsToDo.empty())
@@ -86,12 +100,11 @@ void Crawler::crawl(std::set<std::string> initialRequests)
 
         for(auto& future : futures)
         {
-            std::set<std::string> r1 = future.get();
+            std::set<std::string> crawledLinks = future.get();
+            res.insert(crawledLinks.cbegin(), crawledLinks.cend());
         }
-
-        spdlog::info("requestsToDo size= {}", requestsToDo.size());
-        spdlog::info("requestsDone size= {}", requestsDone.size());
     }
+    return res;
 }
 
 } // namespace webcrawler

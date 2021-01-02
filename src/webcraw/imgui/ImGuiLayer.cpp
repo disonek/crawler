@@ -1,7 +1,6 @@
 #include "ImGuiLayer.hpp"
 
 namespace img {
-
 ImGuiLayer::ImGuiLayer()
 {
     glfwSetErrorCallback(glfw_error_callback);
@@ -72,21 +71,14 @@ ImGuiLayer::~ImGuiLayer()
 void ImGuiLayer::log(std::string logMessage)
 {
     bool p_open{true};
-    // For the demo: add a debug button _BEFORE_ the normal log window contents
-    // We take advantage of a rarely used feature: multiple calls to Begin()/End() are appending to the _same_ window.
-    // Most of the contents of the window will be added by the log.Draw() call.
+
     ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
     ImGui::Begin("Example: Log", &p_open);
-    // if(ImGui::SmallButton("[Debug] Add 5 entries"))
-    // {
     logger.AddLog("%s\n", logMessage.c_str());
-    // }
     ImGui::End();
-
-    // Actually call in the regular Log helper (which will Begin() into the same window as we just did)
-    logger.Draw("Example: Log", &p_open);
 }
-void ImGuiLayer::run()
+
+void ImGuiLayer::guiThread(TaskQueue& taskQueue)
 {
     while(!glfwWindowShouldClose(window))
     {
@@ -101,13 +93,20 @@ void ImGuiLayer::run()
 
         bool run = true;
         createDockspace(run);
+        std::packaged_task<std::set<std::string>(std::string)> task;
+        {
+            std::lock_guard<std::mutex> lg(taskQueue.mutex);
+            if(taskQueue.tasks.empty())
+                continue;
 
-        ImGui::Begin("Statis");
-        ImGui::Text("Renderer2D Stats:");
-        ImGui::End();
+            task = std::move(taskQueue.tasks.front());
+            taskQueue.tasks.pop_front();
+        }
+        task("https://www.google.com/doodles");
 
-        for(auto message : logMessages)
-            log(message);
+        consumeLogs(logMessages);
+        logger.Draw("Example: Log", &run);
+        // ImGui::ShowDemoWindow(&run);
 
         // Render dear imgui into screen
         ImGui::Render();
@@ -235,5 +234,12 @@ void ImGuiLayer::createDockspace(bool& p_open)
     }
 
     ImGui::End();
+}
+
+void ImGuiLayer::consumeLogs(std::set<std::string>& messages)
+{
+    for(auto message : messages)
+        log(message);
+    messages.clear();
 }
 } // namespace img

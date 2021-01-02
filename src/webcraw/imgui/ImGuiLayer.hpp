@@ -3,6 +3,7 @@
 #include <set>
 
 #include "ImGuiLogger.hpp"
+#include "TaskQueue.hpp"
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
@@ -19,18 +20,19 @@ class ImGuiLayer
 public:
     ImGuiLayer();
     ~ImGuiLayer();
-    void run();
+    void guiThread(TaskQueue& taskQueue);
 
     static void glfw_error_callback(int error, const char* description)
     {
         spdlog::error("Glfw Error {}: {}", error, description);
     }
 
-    void setLogMessages(std::set<std::string> logMess);
+    void setLogMessages(std::set<std::string> messagesToLog);
 
 private:
     void log(std::string logMessage);
     void createDockspace(bool& run);
+    void consumeLogs(std::set<std::string>& messages);
     GLFWwindow* window;
     int screenWidth;
     int screenHeight;
