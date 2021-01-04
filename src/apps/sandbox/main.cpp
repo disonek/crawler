@@ -7,21 +7,25 @@
 #include "TraceTimer.hpp"
 #include "imgui/ImGuiLayer.hpp"
 
+
 int main(int argc, char* argv[])
 {
     TaskQueue taskQueue;
     // std::string url = "http://h3.heroes.net.pl/";
     std::string url = "https://www.google.com/doodles";
 
-    auto something = taskQueue.postTaskForGuiThread(webcrawler::Crawler::CrawlerThread);
+    auto crawlerResult = std::async(std::launch::async,
+                                    [&taskQueue, url] { return webcrawler::Crawler::CrawlerThread(taskQueue, url); });
 
-    img::ImGuiLayer imGuiLayer{};
-    // imGuiLayer.setLogMessages(result);
-    imGuiLayer.guiThread(taskQueue);
-    auto results = something.get();
+    auto guiResult = std::async(std::launch::async, [&taskQueue] {
+        img::ImGuiLayer imGuiLayer{};
+        imGuiLayer.guiThread(taskQueue);
+    });
 
-    for(auto result : results)
-        spdlog::error("{}", result.c_str());
+    // guiResult.get();
 
-    utils::registryExampleUsage();
+    // crawlerResult.get();
+
+    // for(auto result : results)
+    //     spdlog::error("{}", result.c_str());
 }

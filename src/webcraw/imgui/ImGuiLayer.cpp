@@ -82,6 +82,7 @@ void ImGuiLayer::guiThread(TaskQueue& taskQueue)
 {
     while(!glfwWindowShouldClose(window))
     {
+        using namespace std::chrono_literals;
         glfwPollEvents();
         glClearColor(0.45f, 0.55f, 0.60f, 1.00f);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -93,18 +94,16 @@ void ImGuiLayer::guiThread(TaskQueue& taskQueue)
 
         bool run = true;
         createDockspace(run);
-        std::packaged_task<std::set<std::string>(std::string)> task;
+
         {
-            std::lock_guard<std::mutex> lg(taskQueue.mutex);
-            if(taskQueue.tasks.empty())
-                continue;
-
-            task = std::move(taskQueue.tasks.front());
-            taskQueue.tasks.pop_front();
+            std::lock_guard<std::mutex> lk(taskQueue.mutex);
+            if(!taskQueue.tasks.empty())
+            {
+                consumeLogs(taskQueue.tasks.front());
+                taskQueue.tasks.pop
+            }
         }
-        task("https://www.google.com/doodles");
 
-        consumeLogs(logMessages);
         logger.Draw("Example: Log", &run);
         // ImGui::ShowDemoWindow(&run);
 
@@ -125,11 +124,6 @@ void ImGuiLayer::guiThread(TaskQueue& taskQueue)
         glViewport(0, 0, screenWidth, screenHeight);
         glfwSwapBuffers(window);
     }
-}
-
-void ImGuiLayer::setLogMessages(std::set<std::string> logMess)
-{
-    logMessages = logMess;
 }
 
 void ImGuiLayer::createDockspace(bool& p_open)
@@ -236,7 +230,7 @@ void ImGuiLayer::createDockspace(bool& p_open)
     ImGui::End();
 }
 
-void ImGuiLayer::consumeLogs(std::set<std::string>& messages)
+void ImGuiLayer::consumeLogs(std::set<std::string> messages)
 {
     for(auto message : messages)
         log(message);

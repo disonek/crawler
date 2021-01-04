@@ -27,16 +27,13 @@ public:
         spdlog::error("Glfw Error {}: {}", error, description);
     }
 
-    void setLogMessages(std::set<std::string> messagesToLog);
-
 private:
     void log(std::string logMessage);
     void createDockspace(bool& run);
-    void consumeLogs(std::set<std::string>& messages);
+    void consumeLogs(std::set<std::string> messages);
     GLFWwindow* window;
     int screenWidth;
     int screenHeight;
     ImGuiAppLog logger;
-    std::set<std::string> logMessages;
 };
 } // namespace img

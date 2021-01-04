@@ -11,7 +11,7 @@
 #include "Webcurl.hpp"
 
 namespace webcrawler {
-std::set<std::string> Crawler::CrawlerThread(std::string url)
+std::set<std::string> Crawler::CrawlerThread(TaskQueue& taskQueue, std::string url)
 {
     utils::ScopedTimer timer(__func__, "main");
     utils::Trace::get().beginSession("Session Name");
@@ -21,6 +21,9 @@ std::set<std::string> Crawler::CrawlerThread(std::string url)
     auto result = crawler.crawl(initialRequests);
 
     utils::Trace::get().endSession();
+    std::lock_guard<std::mutex> lk(taskQueue.mutex);
+    taskQueue.tasks.push(result);
+
     return result;
 }
 
