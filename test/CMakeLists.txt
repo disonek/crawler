@@ -1,11 +1,11 @@
-add_executable(tests)
-target_sources(tests PRIVATE example/HelloTest.cpp)
+add_executable(disint_tests)
+target_sources(disint_tests PRIVATE webcrawl/HighLevelTests.cpp)
 
-target_include_directories(tests PRIVATE example)
+target_include_directories(disint_tests PRIVATE example)
 
 find_package(GTest REQUIRED)
 target_link_libraries(
-  tests
+  disint_tests
   PRIVATE project_options
           project_warnings
           GTest::gtest_main
@@ -13,6 +13,7 @@ target_link_libraries(
           GTest::gmock
           GTest::gtest
           Threads::Threads
+          webcrawl
           )
 
 find_package(benchmark REQUIRED)
@@ -28,9 +29,9 @@ target_link_libraries(bench
 
 
 
-add_test(NAME tests COMMAND tests)
+add_test(NAME disint_tests COMMAND disint_tests)
 
 add_custom_command(
-  TARGET tests
+  TARGET disint_tests
   POST_BUILD
   COMMAND ctest -C Debug -T test --output-on-failuret)

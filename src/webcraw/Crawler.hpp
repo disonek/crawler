@@ -7,14 +7,14 @@
 #include <string>
 #include <unordered_set>
 
-#include "TaskQueue.hpp"
+#include "SharedObjects.hpp"
 #include "TraceTimer.hpp"
 
 namespace webcrawler {
 class Crawler
 {
 public:
-    static std::set<std::string> CrawlerThread(TaskQueue& taskQueue, std::string url);
+    static std::set<std::string> CrawlerThread(BasicProtectedQueue& taskQueue, std::string url);
     std::set<std::string> getLinksFromUrl(const std::string startURL);
     std::set<std::string> crawl(std::set<std::string> initialRequests);
     Crawler(uint8_t numThreads);

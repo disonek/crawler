@@ -3,7 +3,7 @@
 #include <set>
 
 #include "ImGuiLogger.hpp"
-#include "TaskQueue.hpp"
+#include "SharedObjects.hpp"
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
@@ -20,7 +20,7 @@ class ImGuiLayer
 public:
     ImGuiLayer();
     ~ImGuiLayer();
-    void guiThread(TaskQueue& taskQueue);
+    void guiThread(BasicProtectedQueue& taskQueue);
 
     static void glfw_error_callback(int error, const char* description)
     {
@@ -28,9 +28,10 @@ public:
     }
 
 private:
-    void log(std::string logMessage);
     void createDockspace(bool& run);
-    void consumeLogs(std::set<std::string> messages);
+    void printResultsToImGuiLogger(BasicProtectedQueue& taskQueue);
+    void consumeLogs(std::set<std::string>&& messages);
+
     GLFWwindow* window;
     int screenWidth;
     int screenHeight;

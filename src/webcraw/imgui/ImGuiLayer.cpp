@@ -68,17 +68,24 @@ ImGuiLayer::~ImGuiLayer()
     glfwTerminate();
 }
 
-void ImGuiLayer::log(std::string logMessage)
+void ImGuiLayer::consumeLogs(std::set<std::string>&& messages)
 {
-    bool p_open{true};
-
-    ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
-    ImGui::Begin("Example: Log", &p_open);
-    logger.AddLog("%s\n", logMessage.c_str());
-    ImGui::End();
+    for(auto message : messages)
+        logger.AddLog("%s\n", message.c_str());
+    messages.clear();
 }
 
-void ImGuiLayer::guiThread(TaskQueue& taskQueue)
+void ImGuiLayer::printResultsToImGuiLogger(BasicProtectedQueue& taskQueue)
+{
+    std::lock_guard<std::mutex> lk(taskQueue.mutex);
+    if(!taskQueue.tasks.empty())
+    {
+        consumeLogs(std::move(taskQueue.tasks.front()));
+        taskQueue.tasks.pop();
+    }
+}
+
+void ImGuiLayer::guiThread(BasicProtectedQueue& taskQueue)
 {
     while(!glfwWindowShouldClose(window))
     {
@@ -95,17 +102,8 @@ void ImGuiLayer::guiThread(TaskQueue& taskQueue)
         bool run = true;
         createDockspace(run);
 
-        {
-            std::lock_guard<std::mutex> lk(taskQueue.mutex);
-            if(!taskQueue.tasks.empty())
-            {
-                consumeLogs(taskQueue.tasks.front());
-                taskQueue.tasks.pop
-            }
-        }
-
+        printResultsToImGuiLogger(taskQueue);
         logger.Draw("Example: Log", &run);
-        // ImGui::ShowDemoWindow(&run);
 
         // Render dear imgui into screen
         ImGui::Render();
@@ -230,10 +228,4 @@ void ImGuiLayer::createDockspace(bool& p_open)
     ImGui::End();
 }
 
-void ImGuiLayer::consumeLogs(std::set<std::string> messages)
-{
-    for(auto message : messages)
-        log(message);
-    messages.clear();
-}
 } // namespace img

@@ -14,6 +14,8 @@ add_library(webcrawl
   WebCurl.hpp
   imgui/ImGuiLayer.hpp
   imgui/ImGuiLayer.cpp
+  imgui/ImGuiLogger.hpp 
+  imgui/ImGuiLogger.cpp
   debug_tools/Timer.hpp
   debug_tools/Trace.hpp
   debug_tools/TraceTimer.hpp
@@ -22,7 +24,7 @@ add_library(webcrawl
 )
 
 target_include_directories(webcrawl 
-  PUBLIC . debug_tools)
+  PUBLIC . debug_tools imgui)
 
 target_link_libraries(
   webcrawl

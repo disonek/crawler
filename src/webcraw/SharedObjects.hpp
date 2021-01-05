@@ -8,11 +8,10 @@
 #include <thread>
 #include <utility>
 
-struct TaskQueue
+struct BasicProtectedQueue
 {
     std::mutex mutex;
     std::queue<std::set<std::string>> tasks;
-    std::condition_variable conditional;
 };
 
 struct TaskQueuePackagedTask

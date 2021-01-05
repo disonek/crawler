@@ -11,7 +11,7 @@
 #include "Webcurl.hpp"
 
 namespace webcrawler {
-std::set<std::string> Crawler::CrawlerThread(TaskQueue& taskQueue, std::string url)
+std::set<std::string> Crawler::CrawlerThread(BasicProtectedQueue& taskQueue, std::string url)
 {
     utils::ScopedTimer timer(__func__, "main");
     utils::Trace::get().beginSession("Session Name");
@@ -85,9 +85,7 @@ std::set<std::string> Crawler::extractLinks(std::string response, std::string ur
 std::set<std::string> Crawler::crawl(std::set<std::string> initialRequests)
 {
     std::set<std::string> res;
-
     std::copy(initialRequests.begin(), initialRequests.end(), std::back_inserter(requestsToDo));
-
     while(!requestsToDo.empty())
     {
         std::vector<std::future<std::set<std::string>>> futures;
