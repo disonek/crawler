@@ -75,7 +75,7 @@ void ImGuiLayer::consumeLogs(std::set<std::string>&& messages)
     messages.clear();
 }
 
-void ImGuiLayer::printResultsToImGuiLogger(BasicProtectedQueue& taskQueue)
+void ImGuiLayer::printResultsToImGuiLogger(BasicProtectedQueue<>& taskQueue)
 {
     std::lock_guard<std::mutex> lk(taskQueue.mutex);
     if(!taskQueue.tasks.empty())
@@ -85,7 +85,7 @@ void ImGuiLayer::printResultsToImGuiLogger(BasicProtectedQueue& taskQueue)
     }
 }
 
-void ImGuiLayer::guiThread(BasicProtectedQueue& taskQueue)
+void ImGuiLayer::guiThread(BasicProtectedQueue<>& taskQueue)
 {
     while(!glfwWindowShouldClose(window))
     {

@@ -11,20 +11,18 @@
 #include "Webcurl.hpp"
 
 namespace webcrawler {
-std::set<std::string> Crawler::CrawlerThread(BasicProtectedQueue& taskQueue, std::string url)
+void crawlLinksFromUrlAndPushToTaskQueue(BasicProtectedQueue<>& taskQueue, std::string url)
 {
     utils::ScopedTimer timer(__func__, "main");
     utils::Trace::get().beginSession("Session Name");
+
     uint8_t numThreads = 15;
     auto crawler = webcrawler::Crawler{numThreads};
     std::set<std::string> initialRequests = crawler.getLinksFromUrl(url);
     auto result = crawler.crawl(initialRequests);
+    taskQueue.push(result);
 
     utils::Trace::get().endSession();
-    std::lock_guard<std::mutex> lk(taskQueue.mutex);
-    taskQueue.tasks.push(result);
-
-    return result;
 }
 
 Crawler::Crawler(uint8_t numThreads)

@@ -20,7 +20,7 @@ class ImGuiLayer
 public:
     ImGuiLayer();
     ~ImGuiLayer();
-    void guiThread(BasicProtectedQueue& taskQueue);
+    void guiThread(BasicProtectedQueue<>& taskQueue);
 
     static void glfw_error_callback(int error, const char* description)
     {
@@ -29,7 +29,7 @@ public:
 
 private:
     void createDockspace(bool& run);
-    void printResultsToImGuiLogger(BasicProtectedQueue& taskQueue);
+    void printResultsToImGuiLogger(BasicProtectedQueue<>& taskQueue);
     void consumeLogs(std::set<std::string>&& messages);
 
     GLFWwindow* window;

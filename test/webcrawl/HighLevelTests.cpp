@@ -11,10 +11,10 @@ TEST(HighLevelTests, guiAndWebcrawlerRunningOnAnotherThreads)
 {
     BasicProtectedQueue taskQueue;
 
-    std::string url = "https://blog.conan.io/2020/09/24/New-conan-training-series.html";
+    std::string url = "https://www.google.com/doodles";
 
-    auto crawlerResult =
-        std::async(std::launch::async, [&taskQueue, url] { webcrawler::Crawler::CrawlerThread(taskQueue, url); });
+    auto crawlerResult = std::async(
+        std::launch::async, [&taskQueue, url] { webcrawler::crawlLinksFromUrlAndPushToTaskQueue(taskQueue, url); });
 
     auto guiResult = std::async(std::launch::async, [&taskQueue] {
         img::ImGuiLayer imGuiLayer{};
