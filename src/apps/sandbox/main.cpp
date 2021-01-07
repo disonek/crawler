@@ -2,9 +2,7 @@
 #include <string>
 
 #include "Crawler.hpp"
-#include "ScopedTimer.hpp"
 #include "SharedObjects.hpp"
-#include "TraceTimer.hpp"
 #include "imgui/ImGuiLayer.hpp"
 
 int main(int argc, char* argv[])

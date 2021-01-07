@@ -12,6 +12,8 @@ add_library(webcrawl
   Console.cpp
   WebCurl.cpp
   WebCurl.hpp
+  imgui/OpenGLModule.hpp
+  imgui/OpenGLModule.cpp
   imgui/ImGuiLayer.hpp
   imgui/ImGuiLayer.cpp
   imgui/ImGuiLogger.hpp 

@@ -2,12 +2,10 @@
 using namespace testing;
 
 #include "Crawler.hpp"
-#include "ScopedTimer.hpp"
 #include "SharedObjects.hpp"
-#include "TraceTimer.hpp"
 #include "imgui/ImGuiLayer.hpp"
 
-TEST(HighLevelTests, guiAndWebcrawlerRunningOnAnotherThreads)
+TEST(HighLevelTests, DISABLED_guiAndWebcrawlerRunningOnAnotherThreads)
 {
     BasicProtectedQueue taskQueue;
 
@@ -20,4 +18,19 @@ TEST(HighLevelTests, guiAndWebcrawlerRunningOnAnotherThreads)
         img::ImGuiLayer imGuiLayer{};
         imGuiLayer.guiThread(taskQueue);
     });
+}
+
+TEST(HighLevelTests, checkPushToTaskQueue)
+{
+    BasicProtectedQueue taskQueue;
+
+    std::set<std::string> tasks = {"ala ma kota", "kot ma Ale"};
+    taskQueue.push({"ala ma kota2", "kot ma Ale2"});
+
+    auto guiResult = std::async(std::launch::async, [&taskQueue] {
+        img::ImGuiLayer imGuiLayer{};
+        imGuiLayer.guiThread(taskQueue);
+    });
+
+    auto crawlerResult = std::async(std::launch::async, [&taskQueue, tasks] { taskQueue.push(tasks); });
 }
