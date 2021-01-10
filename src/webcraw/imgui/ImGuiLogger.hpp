@@ -5,12 +5,14 @@
 
 namespace img {
 
-struct ImGuiAppLog
+struct ImGuiLogger
 {
-    ImGuiAppLog();
-    void Clear();
-    void AddLog(const char* fmt, ...) IM_FMTARGS(2);
-    void Draw(const char* title, bool* p_open = NULL);
+    virtual ~ImGuiLogger() = default;
+    ImGuiLogger();
+    virtual void initialize();
+    virtual void clear();
+    void addLog(const char* fmt, ...) IM_FMTARGS(2);
+    virtual void draw(const char* title, bool* p_open = NULL);
 
     ImGuiTextBuffer Buf;
     ImGuiTextFilter Filter;

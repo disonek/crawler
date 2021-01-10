@@ -1,3 +1,4 @@
+#pragma once
 #include <spdlog/spdlog.h>
 
 #include "imgui.h"
@@ -15,12 +16,13 @@ namespace img {
 class OpenGLModule
 {
 public:
-    void initalize();
-    bool windowShouldClose();
-    void startNewFrame();
-    void render();
-    void shutDown();
-    void createDockspace(bool& run);
+    virtual ~OpenGLModule() = default;
+    virtual void initalize();
+    virtual bool windowShouldClose();
+    virtual void startNewFrame();
+    virtual void render();
+    virtual void shutDown();
+    virtual void createDockspace(bool& run);
 
     GLFWwindow* window;
     int screenWidth;

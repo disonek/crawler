@@ -1,17 +1,17 @@
 
+#include <memory>
 #include <set>
 
 #include "ImGuiLogger.hpp"
 #include "OpenGLModule.hpp"
 #include "SharedObjects.hpp"
 
-
 namespace img {
 
 class ImGuiLayer
 {
 public:
-    ImGuiLayer();
+    ImGuiLayer(std::shared_ptr<OpenGLModule> module, std::shared_ptr<ImGuiLogger> logger);
     ~ImGuiLayer();
     void guiThread(BasicProtectedQueue<>& taskQueue);
 
@@ -19,7 +19,7 @@ private:
     void printResultsToImGuiLogger(BasicProtectedQueue<>& taskQueue);
     void consumeLogs(std::set<std::string>&& messages);
 
-    OpenGLModule openGLModule;
-    ImGuiAppLog logger;
+    std::shared_ptr<OpenGLModule> openGLModule;
+    std::shared_ptr<ImGuiLogger> logger;
 };
 } // namespace img

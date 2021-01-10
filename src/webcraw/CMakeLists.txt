@@ -30,8 +30,7 @@ target_include_directories(webcrawl
 
 target_link_libraries(
   webcrawl
-  PUBLIC project_options 
-         spdlog::spdlog
+  PUBLIC spdlog::spdlog
          Threads::Threads
          cxxopts::cxxopts
          cpr::cpr
@@ -40,4 +39,5 @@ target_link_libraries(
          glfw::glfw
          GLEW::GLEW 
          imgui
-         )
+  PRIVATE project_options
+)

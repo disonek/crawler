@@ -2,20 +2,25 @@
 
 namespace img {
 
-ImGuiAppLog::ImGuiAppLog()
+ImGuiLogger::ImGuiLogger()
 {
-    AutoScroll = true;
-    Clear();
+    initialize();
 }
 
-void ImGuiAppLog::Clear()
+void ImGuiLogger::initialize()
+{
+    AutoScroll = true;
+    clear();
+}
+
+void ImGuiLogger::clear()
 {
     Buf.clear();
     LineOffsets.clear();
     LineOffsets.push_back(0);
 }
 
-void ImGuiAppLog::AddLog(const char* fmt, ...) IM_FMTARGS(2)
+void ImGuiLogger::addLog(const char* fmt, ...) IM_FMTARGS(2)
 {
     int old_size = Buf.size();
     va_list args;
@@ -27,7 +32,7 @@ void ImGuiAppLog::AddLog(const char* fmt, ...) IM_FMTARGS(2)
             LineOffsets.push_back(old_size + 1);
 }
 
-void ImGuiAppLog::Draw(const char* title, bool* p_open)
+void ImGuiLogger::draw(const char* title, bool* p_open)
 {
     if(!ImGui::Begin(title, p_open))
     {
@@ -52,7 +57,7 @@ void ImGuiAppLog::Draw(const char* title, bool* p_open)
     if(ImGui::Button("Options"))
         ImGui::OpenPopup("Options");
     ImGui::SameLine();
-    bool clear = ImGui::Button("Clear");
+    bool clearState = ImGui::Button("Clear");
     ImGui::SameLine();
     bool copy = ImGui::Button("Copy");
     ImGui::SameLine();
@@ -61,8 +66,8 @@ void ImGuiAppLog::Draw(const char* title, bool* p_open)
     ImGui::Separator();
     ImGui::BeginChild("scrolling", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
 
-    if(clear)
-        Clear();
+    if(clearState)
+        clear();
     if(copy)
         ImGui::LogToClipboard();
 
