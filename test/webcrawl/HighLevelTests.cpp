@@ -23,7 +23,7 @@ TEST(HighLevelTests, DISABLED_defaultUsage)
     });
 }
 
-TEST(HighLevelTests, oneTimeRenderLoopRun)
+TEST(HighLevelTests, oneIterationRunLoop)
 {
     BasicProtectedQueue taskQueue;
     std::shared_ptr<OpenGLModuleMock> module = std::make_shared<StrictMock<OpenGLModuleMock>>();
@@ -43,7 +43,7 @@ TEST(HighLevelTests, oneTimeRenderLoopRun)
     });
 }
 
-TEST(HighLevelTests, DISABLED_toDoChekTaskPush)
+TEST(HighLevelTests, pushedTasksLoggedInGuiThread)
 {
     BasicProtectedQueue taskQueue;
     std::shared_ptr<OpenGLModuleMock> module = std::make_shared<StrictMock<OpenGLModuleMock>>();
@@ -64,6 +64,9 @@ TEST(HighLevelTests, DISABLED_toDoChekTaskPush)
         img::ImGuiLayer imGuiLayer{module, logger};
         imGuiLayer.guiThread(taskQueue);
     });
+
+    EXPECT_CALL(*logger, addSimpleLog("ala ma kota2"));
+    EXPECT_CALL(*logger, addSimpleLog("kot ma Ale2"));
 
     auto crawlerResult = std::async(std::launch::async, [&taskQueue, tasks] { taskQueue.push(tasks); });
 }

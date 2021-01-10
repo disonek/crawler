@@ -1,5 +1,7 @@
 #include "ImGuiLogger.hpp"
 
+#include <spdlog/spdlog.h>
+
 namespace img {
 
 ImGuiLogger::ImGuiLogger()
@@ -18,6 +20,11 @@ void ImGuiLogger::clear()
     Buf.clear();
     LineOffsets.clear();
     LineOffsets.push_back(0);
+}
+
+void ImGuiLogger::addSimpleLog(std::string logMessage)
+{
+    addLog("%s\n", logMessage.c_str());
 }
 
 void ImGuiLogger::addLog(const char* fmt, ...) IM_FMTARGS(2)

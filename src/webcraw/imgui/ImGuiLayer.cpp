@@ -17,8 +17,7 @@ ImGuiLayer::~ImGuiLayer()
 void ImGuiLayer::consumeLogs(std::set<std::string>&& messages)
 {
     for(auto message : messages)
-        logger->addLog("%s\n", message.c_str());
-    messages.clear();
+        logger->addSimpleLog(message);
 }
 
 void ImGuiLayer::printResultsToImGuiLogger(BasicProtectedQueue<>& taskQueue)
@@ -40,7 +39,7 @@ void ImGuiLayer::guiThread(BasicProtectedQueue<>& taskQueue)
         bool run = true;
         openGLModule->createDockspace(run);
         printResultsToImGuiLogger(taskQueue);
-        logger->draw("Example: Log", &run);
+        logger->draw("Webcreawler", &run);
 
         openGLModule->render();
     }
