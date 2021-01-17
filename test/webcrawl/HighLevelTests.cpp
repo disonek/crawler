@@ -8,7 +8,32 @@ using namespace testing;
 #include "mocks/ImGuiLoggerMock.hpp"
 #include "mocks/OpenGLModuleMock.hpp"
 
-TEST(HighLevelTests, DISABLED_defaultUsage)
+class HighLevelTest : public ::testing::Test
+{
+public:
+    HighLevelTest()
+        : module{std::make_shared<StrictMock<OpenGLModuleMock>>()}
+        , logger{std::make_shared<StrictMock<ImGuiLoggerMock>>()}
+    {
+    }
+
+    BasicProtectedQueue<> taskQueue;
+    std::shared_ptr<OpenGLModuleMock> module;
+    std::shared_ptr<ImGuiLoggerMock> logger;
+
+    void singleGuiLoopRun()
+    {
+        EXPECT_CALL(*module, initalize());
+        EXPECT_CALL(*module, windowShouldClose()).WillOnce(Return(false)).WillOnce(Return(true));
+        EXPECT_CALL(*module, startNewFrame());
+        EXPECT_CALL(*module, createDockspace(_));
+        EXPECT_CALL(*module, render());
+        EXPECT_CALL(*logger, draw(_, _));
+        EXPECT_CALL(*module, shutDown());
+    }
+};
+
+TEST(mainExample, DISABLED_defaultUsage)
 {
     BasicProtectedQueue taskQueue;
 
@@ -23,50 +48,31 @@ TEST(HighLevelTests, DISABLED_defaultUsage)
     });
 }
 
-TEST(HighLevelTests, oneIterationRunLoop)
+TEST_F(HighLevelTest, oneIterationRunLoop)
 {
-    BasicProtectedQueue taskQueue;
-    std::shared_ptr<OpenGLModuleMock> module = std::make_shared<StrictMock<OpenGLModuleMock>>();
-    std::shared_ptr<ImGuiLoggerMock> logger = std::make_shared<StrictMock<ImGuiLoggerMock>>();
-
-    EXPECT_CALL(*module, initalize());
-    EXPECT_CALL(*module, windowShouldClose()).WillOnce(Return(false)).WillOnce(Return(true));
-    EXPECT_CALL(*module, startNewFrame());
-    EXPECT_CALL(*module, createDockspace(_));
-    EXPECT_CALL(*module, render());
-    EXPECT_CALL(*logger, draw(_, _));
-    EXPECT_CALL(*module, shutDown());
-
-    auto guiResult = std::async(std::launch::async, [&taskQueue, &module, &logger] {
-        img::ImGuiLayer imGuiLayer{module, logger};
-        imGuiLayer.guiThread(taskQueue);
-    });
+    singleGuiLoopRun();
+    auto guiResult =
+        std::async(std::launch::async, [&taskQueue = this->taskQueue, &module = this->module, &logger = this->logger] {
+            img::ImGuiLayer imGuiLayer{module, logger};
+            imGuiLayer.guiThread(taskQueue);
+        });
 }
 
-TEST(HighLevelTests, pushedTasksLoggedInGuiThread)
+TEST_F(HighLevelTest, pushedTasksLoggedInGuiThread)
 {
-    BasicProtectedQueue taskQueue;
-    std::shared_ptr<OpenGLModuleMock> module = std::make_shared<StrictMock<OpenGLModuleMock>>();
-    std::shared_ptr<ImGuiLoggerMock> logger = std::make_shared<StrictMock<ImGuiLoggerMock>>();
-
-    EXPECT_CALL(*module, initalize());
-    EXPECT_CALL(*module, windowShouldClose()).WillOnce(Return(false)).WillOnce(Return(true));
-    EXPECT_CALL(*module, startNewFrame());
-    EXPECT_CALL(*module, createDockspace(_));
-    EXPECT_CALL(*module, render());
-    EXPECT_CALL(*logger, draw(_, _));
-    EXPECT_CALL(*module, shutDown());
-
+    singleGuiLoopRun();
     std::set<std::string> tasks = {"ala ma kota", "kot ma Ale"};
     taskQueue.push({"ala ma kota2", "kot ma Ale2"});
 
-    auto guiResult = std::async(std::launch::async, [&taskQueue, &module, &logger] {
-        img::ImGuiLayer imGuiLayer{module, logger};
-        imGuiLayer.guiThread(taskQueue);
-    });
+    auto guiResult =
+        std::async(std::launch::async, [&taskQueue = this->taskQueue, &module = this->module, &logger = this->logger] {
+            img::ImGuiLayer imGuiLayer{module, logger};
+            imGuiLayer.guiThread(taskQueue);
+        });
 
     EXPECT_CALL(*logger, addSimpleLog("ala ma kota2"));
     EXPECT_CALL(*logger, addSimpleLog("kot ma Ale2"));
 
-    auto crawlerResult = std::async(std::launch::async, [&taskQueue, tasks] { taskQueue.push(tasks); });
+    auto crawlerResult =
+        std::async(std::launch::async, [&taskQueue = this->taskQueue, tasks] { taskQueue.push(tasks); });
 }
