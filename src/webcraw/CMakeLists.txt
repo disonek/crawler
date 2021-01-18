@@ -26,7 +26,7 @@ add_library(webcrawl
 )
 
 target_include_directories(webcrawl 
-  PUBLIC . debug_tools imgui)
+  PUBLIC . debug_tools imgui messanger)
 
 target_link_libraries(
   webcrawl
