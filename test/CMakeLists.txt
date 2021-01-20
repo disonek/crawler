@@ -2,7 +2,7 @@ add_executable(disint_tests)
 target_sources(disint_tests 
   PRIVATE webcrawl/HighLevelTests.cpp
           webcrawl/ExpetimentTests.cpp
-          webcrawl/MessangerTest.cpp
+          webcrawl/messangerExample/MessangerTest.cpp
 )
 
 target_include_directories(disint_tests PRIVATE example)
@@ -36,7 +36,7 @@ target_link_libraries(bench
 
 add_test(NAME disint_tests COMMAND disint_tests)
 
-add_custom_command(
-  TARGET disint_tests
-  POST_BUILD
-  COMMAND ctest -C Debug -T test --output-on-failure)
+# add_custom_command(
+#   TARGET disint_tests
+#   POST_BUILD
+#   COMMAND ctest -C Debug -T test --output-on-failure)

@@ -1,3 +1,5 @@
+#pragma once
+
 #include <condition_variable>
 #include <mutex>
 #include <queue>
@@ -161,9 +163,9 @@ public:
     }
 
     template <typename Message, typename Func>
-    TemplatedDispatcher<Dispatcher, Message, Func> hadle(Func&& func)
+    TemplatedDispatcher<Dispatcher, Message, Func> handle(Func&& func)
     {
-        return TemplateDispatcher<Dispatcher, Message, Func>(queue, this, std::forward<Func>(func));
+        return TemplatedDispatcher<Dispatcher, Message, Func>(queue, this, std::forward<Func>(func));
     }
     ~Dispatcher() noexcept(false)
     {
@@ -177,7 +179,7 @@ private:
     Dispatcher(Dispatcher const&) = delete;
     Dispatcher& operator=(Dispatcher const&) = delete;
     template <typename Dispatcher, typename Msg, typename Func>
-    friend class TemplateDispatcher;
+    friend class TemplatedDispatcher;
 
     void waitAndDispatch()
     {
@@ -200,7 +202,7 @@ private:
     bool chained;
 };
 
-class Reciver
+class Receiver
 {
 public:
     operator Sender()
