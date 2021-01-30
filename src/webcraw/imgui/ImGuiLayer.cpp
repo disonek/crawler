@@ -6,6 +6,10 @@ ImGuiLayer::ImGuiLayer(std::shared_ptr<OpenGLModule> module, std::shared_ptr<ImG
     : openGLModule(module)
     , logger(logger)
 {
+}
+
+void ImGuiLayer::intialize()
+{
     openGLModule->initalize();
 }
 

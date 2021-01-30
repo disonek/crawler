@@ -39,12 +39,13 @@ void ImGuiLogger::addLog(const char* fmt, ...) IM_FMTARGS(2)
             LineOffsets.push_back(old_size + 1);
 }
 
-void ImGuiLogger::draw(const char* title, bool* p_open)
+bool ImGuiLogger::draw(const char* title, bool* p_open)
 {
+    bool ret = false;
     if(!ImGui::Begin(title, p_open))
     {
         ImGui::End();
-        return;
+        return ret;
     }
 
     // Options menu
@@ -58,6 +59,7 @@ void ImGuiLogger::draw(const char* title, bool* p_open)
     ImGui::InputText("input text", str0, IM_ARRAYSIZE(str0));
     if(ImGui::SmallButton("Crawl"))
     {
+        ret = true;
     }
 
     // Main window
@@ -131,5 +133,7 @@ void ImGuiLogger::draw(const char* title, bool* p_open)
 
     ImGui::EndChild();
     ImGui::End();
+
+    return ret;
 }
 } // namespace img

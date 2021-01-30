@@ -10,6 +10,6 @@ public:
     virtual ~ImGuiLoggerMock() = default;
     MOCK_METHOD(void, initialize, (), (override));
     MOCK_METHOD(void, clear, (), (override));
-    MOCK_METHOD(void, draw, (const char*, bool*), (override));
+    MOCK_METHOD(bool, draw, (const char*, bool*), (override));
     MOCK_METHOD(void, addSimpleLog, (std::string), (override));
 };

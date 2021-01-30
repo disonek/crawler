@@ -14,6 +14,7 @@ public:
     ImGuiLayer(std::shared_ptr<OpenGLModule> module, std::shared_ptr<ImGuiLogger> logger);
     ~ImGuiLayer();
     void guiThread(BasicProtectedQueue<>& taskQueue);
+    void intialize();
 
 private:
     void printResultsToImGuiLogger(BasicProtectedQueue<>& taskQueue);

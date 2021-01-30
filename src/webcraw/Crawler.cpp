@@ -11,23 +11,17 @@
 #include "Webcurl.hpp"
 
 namespace webcrawler {
-void crawlLinksFromUrlAndPushToTaskQueue(BasicProtectedQueue<>& taskQueue, std::string url)
+
+void Crawler::crawlLinksFromUrlAndPushToTaskQueue(BasicProtectedQueue<>& taskQueue, std::string url)
 {
     utils::ScopedTimer timer(__func__, "main");
     utils::Trace::get().beginSession("Session Name");
 
-    uint8_t numThreads = 15;
-    auto crawler = webcrawler::Crawler{numThreads};
-    std::set<std::string> initialRequests = crawler.getLinksFromUrl(url);
-    auto result = crawler.crawl(initialRequests);
+    std::set<std::string> initialRequests = getLinksFromUrl(url);
+    auto result = crawl(initialRequests);
     taskQueue.push(result);
 
     utils::Trace::get().endSession();
-}
-
-Crawler::Crawler(uint8_t numThreads)
-    : numThreads{numThreads}
-{
 }
 
 std::set<std::string> Crawler::getLinksFromUrl(const std::string url)
@@ -84,6 +78,8 @@ std::set<std::string> Crawler::crawl(std::set<std::string> initialRequests)
 {
     std::set<std::string> res;
     std::copy(initialRequests.begin(), initialRequests.end(), std::back_inserter(requestsToDo));
+
+    uint8_t numThreads = 15;
     while(!requestsToDo.empty())
     {
         std::vector<std::future<std::set<std::string>>> futures;

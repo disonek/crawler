@@ -2,7 +2,7 @@
 
 #include <MessangerCore.hpp>
 
-#include "Messages.hpp"
+#include "MessagesExample.hpp"
 
 class bank_machine
 {

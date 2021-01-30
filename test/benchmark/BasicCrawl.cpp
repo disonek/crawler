@@ -10,10 +10,11 @@ static void basicCrawl(benchmark::State& state)
     for(auto _ : state)
     {
         uint64_t numThreads = state.range(0);
-        auto crawler = webcrawler::Crawler{static_cast<uint8_t>(numThreads)};
+        auto crawler = webcrawler::Crawler{};
 
         spdlog::warn("Number of threads {}", numThreads);
         spdlog::info("Initial request");
+
         std::set<std::string> initialRequests = crawler.getLinksFromUrl("https://www.google.com/doodles");
 
         spdlog::info("Crawl");

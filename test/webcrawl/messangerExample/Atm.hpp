@@ -2,7 +2,7 @@
 
 #include <MessangerCore.hpp>
 
-#include "Messages.hpp"
+#include "MessagesExample.hpp"
 
 class atm
 {
@@ -17,7 +17,7 @@ class atm
     void process_withdrawal()
     {
         incoming.wait()
-            .handle<withdraw_ok>([&](withdraw_ok const& msg) {
+            .handle<withdraw_ok>([&](withdraw_ok const& /*msg*/) {
                 interface_hardware.send(issue_money(withdrawal_amount));
                 bank.send(withdrawal_processed(account, withdrawal_amount));
                 state = &atm::done_processing;
