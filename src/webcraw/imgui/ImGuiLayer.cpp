@@ -26,12 +26,9 @@ void ImGuiLayer::consumeLogs(std::set<std::string>&& messages)
 
 void ImGuiLayer::printResultsToImGuiLogger(BasicProtectedQueue<>& taskQueue)
 {
-    std::lock_guard<std::mutex> lk(taskQueue.mutex);
-    if(!taskQueue.tasks.empty())
-    {
-        consumeLogs(std::move(taskQueue.tasks.front()));
-        taskQueue.tasks.pop();
-    }
+    auto response = taskQueue.popResponse();
+    if(std::nullopt != response)
+        consumeLogs(std::move(response.value()));
 }
 
 void ImGuiLayer::guiThread(BasicProtectedQueue<>& taskQueue)
@@ -43,7 +40,10 @@ void ImGuiLayer::guiThread(BasicProtectedQueue<>& taskQueue)
         bool run = true;
         openGLModule->createDockspace(run);
         printResultsToImGuiLogger(taskQueue);
-        logger->draw("Webcreawler", &run);
+        if(logger->draw("Webcreawler", &run))
+        {
+            taskQueue.pushRequest("https://www.google.com/doodle");
+        }
 
         openGLModule->render();
     }

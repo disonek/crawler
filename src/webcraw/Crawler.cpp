@@ -12,6 +12,20 @@
 
 namespace webcrawler {
 
+void Crawler::run(BasicProtectedQueue<>& taskQueue)
+{
+    for(;;)
+    {
+        auto request = taskQueue.popRequest();
+        if(std::nullopt != request)
+        {
+            std::set<std::string> initialRequests = getLinksFromUrl(request.value());
+            auto result = crawl(initialRequests);
+            taskQueue.pushResponse(result);
+        }
+    }
+}
+
 void Crawler::crawlLinksFromUrlAndPushToTaskQueue(BasicProtectedQueue<>& taskQueue, std::string url)
 {
     utils::ScopedTimer timer(__func__, "main");
@@ -19,7 +33,7 @@ void Crawler::crawlLinksFromUrlAndPushToTaskQueue(BasicProtectedQueue<>& taskQue
 
     std::set<std::string> initialRequests = getLinksFromUrl(url);
     auto result = crawl(initialRequests);
-    taskQueue.push(result);
+    taskQueue.pushResponse(result);
 
     utils::Trace::get().endSession();
 }

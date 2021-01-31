@@ -9,12 +9,8 @@ int main(int argc, char* argv[])
 {
     BasicProtectedQueue taskQueue;
 
-    std::string url = "https://www.google.com/doodles";
-
     webcrawler::Crawler crawler;
-    auto crawlerResult = std::async(std::launch::async, [&taskQueue, url, &crawler] {
-        crawler.crawlLinksFromUrlAndPushToTaskQueue(taskQueue, url);
-    });
+    auto crawlerResult = std::async(std::launch::async, [&taskQueue, &crawler] { crawler.run(taskQueue); });
 
     auto guiResult = std::async(std::launch::async, [&taskQueue] {
         img::ImGuiLayer imGuiLayer{std::make_shared<img::OpenGLModule>(), std::make_shared<img::ImGuiLogger>()};

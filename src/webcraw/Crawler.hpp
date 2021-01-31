@@ -17,6 +17,7 @@ public:
 
     std::set<std::string> getLinksFromUrl(const std::string startURL);
     std::set<std::string> crawl(std::set<std::string> initialRequests);
+    void run(BasicProtectedQueue<>& taskQueue);
 
 private:
     std::set<std::string> extractLinks(std::string response, std::string url);

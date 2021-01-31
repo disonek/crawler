@@ -33,8 +33,8 @@ public:
     }
 };
 
-TEST(mainExample, defaultUsage)
-// TEST(mainExample, DISABLED_defaultUsage)
+// TEST(mainExample, defaultUsage)
+TEST(mainExample, DISABLED_defaultUsage)
 {
     BasicProtectedQueue taskQueue;
 
@@ -67,7 +67,7 @@ TEST_F(HighLevelTest, pushedTasksLoggedInGuiThread)
 {
     singleGuiLoopRun();
     std::set<std::string> tasks = {"ala ma kota", "kot ma Ale"};
-    taskQueue.push({"ala ma kota2", "kot ma Ale2"});
+    taskQueue.pushResponse({"ala ma kota2", "kot ma Ale2"});
 
     auto guiResult =
         std::async(std::launch::async, [&taskQueue = this->taskQueue, &module = this->module, &logger = this->logger] {
@@ -80,5 +80,5 @@ TEST_F(HighLevelTest, pushedTasksLoggedInGuiThread)
     EXPECT_CALL(*logger, addSimpleLog("kot ma Ale2"));
 
     auto crawlerResult =
-        std::async(std::launch::async, [&taskQueue = this->taskQueue, tasks] { taskQueue.push(tasks); });
+        std::async(std::launch::async, [&taskQueue = this->taskQueue, tasks] { taskQueue.pushResponse(tasks); });
 }

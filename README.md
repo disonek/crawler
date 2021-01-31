@@ -1,3 +1,4 @@
 TO DO:
 Error Handling
-Start crawling form UI
+refactor, check what is to refactor
+traditonal method startup using std::thread
