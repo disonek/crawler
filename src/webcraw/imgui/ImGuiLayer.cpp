@@ -37,12 +37,13 @@ void ImGuiLayer::run(ProtectedQueue& taskQueue)
     {
         openGLModule->startNewFrame();
 
+        std::string link{};
         bool run = true;
         openGLModule->createDockspace(run);
         printResultsToImGuiLogger(taskQueue);
-        if(logger->draw("Webcreawler", &run))
+        if(logger->draw("Webcreawler", &run, link))
         {
-            taskQueue.pushRequest("https://www.google.com/doodle");
+            taskQueue.pushRequest(link);
         }
 
         openGLModule->render();

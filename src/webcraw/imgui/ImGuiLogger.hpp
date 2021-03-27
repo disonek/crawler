@@ -15,7 +15,7 @@ public:
     virtual void initialize();
     virtual void clear();
     virtual void addSimpleLog(std::string logMessage);
-    virtual bool draw(const char* title, bool* p_open = NULL);
+    virtual bool draw(const char* title, bool* p_open, std::string& link);
 
 private:
     void addLog(const char* fmt, ...) IM_FMTARGS(2);

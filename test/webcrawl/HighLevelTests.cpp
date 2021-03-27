@@ -28,7 +28,7 @@ public:
         EXPECT_CALL(*module, startNewFrame());
         EXPECT_CALL(*module, createDockspace(_));
         EXPECT_CALL(*module, render());
-        EXPECT_CALL(*logger, draw(_, _));
+        EXPECT_CALL(*logger, draw(_, _, _));
         EXPECT_CALL(*module, shutDown());
     }
 };

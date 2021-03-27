@@ -39,7 +39,7 @@ void ImGuiLogger::addLog(const char* fmt, ...) IM_FMTARGS(2)
             LineOffsets.push_back(old_size + 1);
 }
 
-bool ImGuiLogger::draw(const char* title, bool* p_open)
+bool ImGuiLogger::draw(const char* title, bool* p_open, std::string& link)
 {
     bool ret = false;
     if(!ImGui::Begin(title, p_open))
@@ -55,10 +55,11 @@ bool ImGuiLogger::draw(const char* title, bool* p_open)
         ImGui::EndPopup();
     }
 
-    static char str0[128] = "Hello, world!";
+    static char str0[128] = "https://www.google.com/doodle";
     ImGui::InputText("input text", str0, IM_ARRAYSIZE(str0));
     if(ImGui::SmallButton("Crawl"))
     {
+        link = str0;
         ret = true;
     }
 
