@@ -1,5 +1,6 @@
 #pragma once
 
+#include <atomic>
 #include <future>
 #include <mutex>
 #include <optional>
@@ -9,50 +10,64 @@
 #include <thread>
 #include <utility>
 
-template <typename Response = std::set<std::string>>
-class BasicProtectedQueue
+template <typename T>
+class TemplatedProtectedQueue
 {
 public:
-    using Request = std::string;
-    void pushResponse(Response response)
+    void push(T item)
     {
-        std::lock_guard<std::mutex> lk(responsesMutex);
-        responses.push(response);
+        std::lock_guard<std::mutex> lk(mutex);
+        queue.push(item);
     }
 
-    std::optional<Response> popResponse()
+    std::optional<T> pop()
     {
-        std::lock_guard<std::mutex> lk(responsesMutex);
-        if(!responses.empty())
+        std::lock_guard<std::mutex> lk(mutex);
+        if(!queue.empty())
         {
-            auto result = responses.front();
-            responses.pop();
-            return result;
-        }
-        return std::nullopt;
-    }
-
-    void pushRequest(Request request)
-    {
-        std::lock_guard<std::mutex> lk(requestsMutex);
-        requests.push(request);
-    }
-
-    std::optional<Request> popRequest()
-    {
-        std::lock_guard<std::mutex> lk(requestsMutex);
-        if(!requests.empty())
-        {
-            auto result = requests.front();
-            requests.pop();
+            auto result = queue.front();
+            queue.pop();
             return result;
         }
         return std::nullopt;
     }
 
 private:
-    std::mutex responsesMutex;
-    std::mutex requestsMutex;
-    std::queue<Response> responses;
-    std::queue<std::string> requests;
+    std::mutex mutex;
+    std::queue<T> queue;
+};
+
+class ProtectedQueue
+{
+public:
+    using Response = std::set<std::string>;
+    using Request = std::string;
+
+    void pushResponse(Response response)
+    {
+        responses.push(response);
+    }
+
+    std::optional<Response> popResponse()
+    {
+        return responses.pop();
+    }
+
+    void pushRequest(Request request)
+    {
+        requests.push(request);
+    }
+
+    std::optional<Request> popRequest()
+    {
+        return requests.pop();
+    }
+
+    std::atomic<bool> ready{false};
+
+private:
+    std::mutex readyMutex;
+
+    TemplatedProtectedQueue<Response> responses;
+    TemplatedProtectedQueue<Request> requests;
 };

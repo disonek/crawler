@@ -17,7 +17,7 @@ public:
     {
     }
 
-    BasicProtectedQueue<> taskQueue;
+    ProtectedQueue taskQueue;
     std::shared_ptr<OpenGLModuleMock> module;
     std::shared_ptr<ImGuiLoggerMock> logger;
 
@@ -34,22 +34,35 @@ public:
 };
 
 // TEST(mainExample, defaultUsage)
-TEST(mainExample, DISABLED_defaultUsage)
+TEST(mainExample, DISABLED_defaultUsageAsync)
 {
-    BasicProtectedQueue taskQueue;
-
-    std::string url = "https://www.google.com/doodles";
+    ProtectedQueue taskQueue;
 
     webcrawler::Crawler crawler;
-    auto crawlerResult = std::async(std::launch::async, [&taskQueue, url, &crawler] {
-        crawler.crawlLinksFromUrlAndPushToTaskQueue(taskQueue, url);
-    });
+    auto crawlerResult = std::async(std::launch::async, [&taskQueue, &crawler] { crawler.run(taskQueue); });
 
     auto guiResult = std::async(std::launch::async, [&taskQueue] {
         img::ImGuiLayer imGuiLayer{std::make_shared<img::OpenGLModule>(), std::make_shared<img::ImGuiLogger>()};
         imGuiLayer.intialize();
-        imGuiLayer.guiThread(taskQueue);
+        imGuiLayer.run(taskQueue);
     });
+}
+
+TEST(mainExample, DISABLED_defaultUsageThread)
+{
+    ProtectedQueue taskQueue;
+
+    webcrawler::Crawler crawler;
+    img::ImGuiLayer imGuiLayer{std::make_shared<img::OpenGLModule>(), std::make_shared<img::ImGuiLogger>()};
+    std::thread crawlerThread(&webcrawler::Crawler::run, &crawler, std::ref(taskQueue));
+
+    std::thread imGuiLayerThread([&taskQueue, &imGuiLayer]() {
+        imGuiLayer.intialize();
+        imGuiLayer.run(taskQueue);
+    });
+
+    crawlerThread.join();
+    imGuiLayerThread.join();
 }
 
 TEST_F(HighLevelTest, oneIterationRunLoop)
@@ -59,7 +72,7 @@ TEST_F(HighLevelTest, oneIterationRunLoop)
         std::async(std::launch::async, [&taskQueue = this->taskQueue, &module = this->module, &logger = this->logger] {
             img::ImGuiLayer imGuiLayer{module, logger};
             imGuiLayer.intialize();
-            imGuiLayer.guiThread(taskQueue);
+            imGuiLayer.run(taskQueue);
         });
 }
 
@@ -73,7 +86,7 @@ TEST_F(HighLevelTest, pushedTasksLoggedInGuiThread)
         std::async(std::launch::async, [&taskQueue = this->taskQueue, &module = this->module, &logger = this->logger] {
             img::ImGuiLayer imGuiLayer{module, logger};
             imGuiLayer.intialize();
-            imGuiLayer.guiThread(taskQueue);
+            imGuiLayer.run(taskQueue);
         });
 
     EXPECT_CALL(*logger, addSimpleLog("ala ma kota2"));

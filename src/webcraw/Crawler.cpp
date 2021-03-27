@@ -12,10 +12,15 @@
 
 namespace webcrawler {
 
-void Crawler::run(BasicProtectedQueue<>& taskQueue)
+void Crawler::run(ProtectedQueue& taskQueue)
 {
     for(;;)
     {
+        if(true == taskQueue.ready.load())
+        {
+            return;
+        }
+
         auto request = taskQueue.popRequest();
         if(std::nullopt != request)
         {
@@ -26,7 +31,7 @@ void Crawler::run(BasicProtectedQueue<>& taskQueue)
     }
 }
 
-void Crawler::crawlLinksFromUrlAndPushToTaskQueue(BasicProtectedQueue<>& taskQueue, std::string url)
+void Crawler::crawlLinksFromUrlAndPushToTaskQueue(ProtectedQueue& taskQueue, std::string url)
 {
     utils::ScopedTimer timer(__func__, "main");
     utils::Trace::get().beginSession("Session Name");

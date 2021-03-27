@@ -13,11 +13,11 @@ namespace webcrawler {
 class Crawler
 {
 public:
-    void crawlLinksFromUrlAndPushToTaskQueue(BasicProtectedQueue<>& taskQueue, std::string url);
+    void crawlLinksFromUrlAndPushToTaskQueue(ProtectedQueue& taskQueue, std::string url);
 
     std::set<std::string> getLinksFromUrl(const std::string startURL);
     std::set<std::string> crawl(std::set<std::string> initialRequests);
-    void run(BasicProtectedQueue<>& taskQueue);
+    void run(ProtectedQueue& taskQueue);
 
 private:
     std::set<std::string> extractLinks(std::string response, std::string url);

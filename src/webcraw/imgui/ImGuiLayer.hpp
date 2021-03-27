@@ -13,11 +13,11 @@ class ImGuiLayer
 public:
     ImGuiLayer(std::shared_ptr<OpenGLModule> module, std::shared_ptr<ImGuiLogger> logger);
     ~ImGuiLayer();
-    void guiThread(BasicProtectedQueue<>& taskQueue);
+    void run(ProtectedQueue& taskQueue);
     void intialize();
 
 private:
-    void printResultsToImGuiLogger(BasicProtectedQueue<>& taskQueue);
+    void printResultsToImGuiLogger(ProtectedQueue& taskQueue);
     void consumeLogs(std::set<std::string>&& messages);
 
     std::shared_ptr<OpenGLModule> openGLModule;

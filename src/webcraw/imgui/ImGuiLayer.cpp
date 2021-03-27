@@ -24,14 +24,14 @@ void ImGuiLayer::consumeLogs(std::set<std::string>&& messages)
         logger->addSimpleLog(message);
 }
 
-void ImGuiLayer::printResultsToImGuiLogger(BasicProtectedQueue<>& taskQueue)
+void ImGuiLayer::printResultsToImGuiLogger(ProtectedQueue& taskQueue)
 {
     auto response = taskQueue.popResponse();
     if(std::nullopt != response)
         consumeLogs(std::move(response.value()));
 }
 
-void ImGuiLayer::guiThread(BasicProtectedQueue<>& taskQueue)
+void ImGuiLayer::run(ProtectedQueue& taskQueue)
 {
     while(!openGLModule->windowShouldClose())
     {
@@ -47,6 +47,7 @@ void ImGuiLayer::guiThread(BasicProtectedQueue<>& taskQueue)
 
         openGLModule->render();
     }
+    taskQueue.ready.store(true);
 }
 
 } // namespace img
