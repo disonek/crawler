@@ -21,7 +21,9 @@ ImGuiLayer::~ImGuiLayer()
 void ImGuiLayer::consumeLogs(std::set<std::string>&& messages)
 {
     for(auto message : messages)
+    {
         logger->addSimpleLog(message);
+    }
 }
 
 void ImGuiLayer::printResultsToImGuiLogger(ProtectedQueue& taskQueue)

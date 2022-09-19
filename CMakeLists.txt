@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 
 # Set the project name to your project name, my project isn't very descriptive
-project(new_project CXX)
+project(crawler CXX)
 include(cmake/StandardProjectSettings.cmake)
 include(cmake/PreventInSourceBuilds.cmake)
 
@@ -64,7 +64,6 @@ add_subdirectory(test)
 # testing") add_subdirectory(test) endif()
 
 add_subdirectory(external/imgui)
-add_subdirectory(external/imgui-sfml)
 add_subdirectory(external/cxxopts)
 add_subdirectory(src/apps/sandbox)
 add_subdirectory(src/webcraw)
