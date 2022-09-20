@@ -16,7 +16,7 @@ include(${CMAKE_BINARY_DIR}/conan.cmake)
 conan_cmake_autodetect(settings)
 
 conan_cmake_install(PATH_OR_REFERENCE ..
-                    CONANFILE conanfile.txt
+                    CONANFILE conanfile.py
                     BUILD missing
                     REMOTE conancenter
                     PROFILE default

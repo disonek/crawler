@@ -4,9 +4,15 @@ find_package(LibXml2 REQUIRED)
 find_package(EnTT REQUIRED)
 find_package(glfw3 REQUIRED)
 find_package(GLEW REQUIRED)
+find_package(boost REQUIRED)
 
 
 add_library(webcrawl
+  Crawler2.cpp
+  Crawler2.hpp
+  urls_large_data.cpp
+  urls_large_data.hpp
+  
   Crawler.cpp
   Crawler.hpp
   Console.cpp
@@ -28,6 +34,12 @@ add_library(webcrawl
 target_include_directories(webcrawl 
   PUBLIC . debug_tools imgui messanger)
 
+target_compile_definitions(webcrawl
+  PRIVATE
+      #from  https://curl.se/docs/caextract.html
+      TESTS_CACERT_PEM="${CMAKE_CURRENT_SOURCE_DIR}/cacert.pem"
+)
+
 target_link_libraries(
   webcrawl
   PUBLIC spdlog::spdlog
@@ -38,6 +50,7 @@ target_link_libraries(
          EnTT::EnTT
          glfw::glfw
          GLEW::GLEW 
+         Boost::system
          imgui
   PRIVATE project_options
 )
