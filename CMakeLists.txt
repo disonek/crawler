@@ -63,7 +63,6 @@ add_subdirectory(test)
 # if(ENABLE_TESTING) enable_testing() message("Building Tests. Be sure to check out test/constexpr_tests for constexpr
 # testing") add_subdirectory(test) endif()
 
-add_subdirectory(external/imgui)
 add_subdirectory(external/cxxopts)
 add_subdirectory(src/apps/sandbox)
 add_subdirectory(src/webcraw)

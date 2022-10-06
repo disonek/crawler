@@ -6,6 +6,23 @@ find_package(glfw3 REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(boost REQUIRED)
 
+add_library(imgui STATIC)
+target_sources(
+  imgui
+  PUBLIC    ${CMAKE_SOURCE_DIR}/external/imgui/imgui_widgets.cpp
+            ${CMAKE_SOURCE_DIR}/external/imgui/imgui_demo.cpp
+  INTERFACE ${CMAKE_SOURCE_DIR}/external/imgui/imconfig.h
+            ${CMAKE_SOURCE_DIR}/external/imgui/imgui.h
+            ${CMAKE_SOURCE_DIR}/external/imgui/imgui.cpp
+            ${CMAKE_SOURCE_DIR}/external/imgui/imgui_draw.cpp
+            ${CMAKE_SOURCE_DIR}/external/imgui/examples/imgui_impl_glfw.cpp
+            ${CMAKE_SOURCE_DIR}/external/imgui/examples/imgui_impl_opengl3.cpp 
+            ${CMAKE_SOURCE_DIR}/external/imgui/imgui_internal.h
+            ${CMAKE_SOURCE_DIR}/external/imgui/imstb_rectpack.h
+            ${CMAKE_SOURCE_DIR}/external/imgui/imstb_textedit.h
+            ${CMAKE_SOURCE_DIR}/external/imgui/imstb_truetype.h)
+
+target_include_directories(imgui INTERFACE  ${CMAKE_SOURCE_DIR}/external/imgui/examples ${CMAKE_SOURCE_DIR}/external/imgui)
 
 add_library(webcrawl
   Crawler2.cpp
