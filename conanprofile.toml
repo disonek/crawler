@@ -1,4 +1,9 @@
-include(default)
 
 [settings]
+arch=x86_64
+compiler=msvc
+compiler.cppstd=20
+compiler.runtime=dynamic
+compiler.version=193
+os=Windows
 build_type=Debug
