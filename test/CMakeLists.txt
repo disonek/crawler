@@ -7,12 +7,11 @@ target_sources(disint_tests
 )
 
 target_include_directories(disint_tests PRIVATE example)
-
+target_include_directories(disint_tests PUBLIC ${glfw3_INCLUDE_DIRS})
 find_package(GTest REQUIRED)
 target_link_libraries(
   disint_tests
-  PRIVATE project_warnings
-          GTest::gtest_main
+  PRIVATE GTest::gtest_main 
           GTest::gmock_main
           GTest::gmock
           GTest::gtest
@@ -27,9 +26,7 @@ add_executable(bench)
 target_sources(bench PRIVATE "benchmark/BasicCrawl.cpp")
 
 target_link_libraries(bench
-  PRIVATE project_options
-          project_warnings
-          benchmark::benchmark
+  PRIVATE benchmark::benchmark
           Threads::Threads
           webcrawl)
 

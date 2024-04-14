@@ -12,7 +12,7 @@ void OpenGLModule::initalize()
         spdlog::error("Failed to initialize GLFW");
     }
 
-    constexpr char* glsl_version = "#version 430";
+    const char* glsl_version = "#version 430";
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // 3.2+ only

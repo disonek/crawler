@@ -1,10 +1,10 @@
-find_package(spdlog REQUIRED)
 find_package(cpr REQUIRED)
 find_package(LibXml2 REQUIRED)
 find_package(EnTT REQUIRED)
 find_package(glfw3 REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(boost REQUIRED)
+find_package(spdlog REQUIRED)
 
 add_library(imgui STATIC)
 target_sources(
@@ -48,7 +48,7 @@ add_library(webcrawl
   debug_tools/ScopedTimer.cpp
 )
 
-target_include_directories(webcrawl 
+target_include_directories(webcrawl   
   PUBLIC . debug_tools imgui messanger)
 
 target_compile_definitions(webcrawl
@@ -56,6 +56,7 @@ target_compile_definitions(webcrawl
       #from  https://curl.se/docs/caextract.html
       TESTS_CACERT_PEM="${CMAKE_CURRENT_SOURCE_DIR}/cacert.pem"
 )
+target_include_directories(webcrawl PUBLIC ${glfw3_INCLUDE_DIRS})
 
 target_link_libraries(
   webcrawl
@@ -65,9 +66,8 @@ target_link_libraries(
          cpr::cpr
          LibXml2::LibXml2
          EnTT::EnTT
-         glfw::glfw
+         glfw
          GLEW::GLEW 
          Boost::system
          imgui
-  PRIVATE project_options
 )
