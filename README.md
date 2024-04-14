@@ -8,3 +8,6 @@ type link from UI - better solution than is currently<br />
         "-DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=conan_provider.cmake"
     ],
 }
+
+cmake . -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake
+git submodule update --init --recursive

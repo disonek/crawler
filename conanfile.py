@@ -18,9 +18,6 @@ class CompressorRecipe(ConanFile):
         self.requires('glew/2.2.0'),
         self.requires('glfw/3.3.8')
 
-        #('openssl/1.1.1h'),
-        #('libcurl/7.73.0'),
-        #('nlohmann_json/3.9.1'),
 
     def build_requirements(self):
         self.tool_requires("cmake/3.22.6")
