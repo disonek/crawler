@@ -14,6 +14,7 @@ Project supports currently Windows Os. Hovewer support for a Linux/MacOs can be 
 1) git submodule update --init --recursive <br />
 2) mkdir build<br />
 3) cmake -B build -S . -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES="conan_provider.cmake" -DCMAKE_BUILD_TYPE="Debug" <br />
+3) cmake --build build --config Debug <br />
 
 ### More info
  [cmake-conan](https://github.com/conan-io/cmake-conan) <br />

@@ -8,7 +8,7 @@
 #include <future>
 
 #include "ScopedTimer.hpp"
-#include "Webcurl.hpp"
+#include "WebCurl.hpp"
 
 namespace webcrawler {
 

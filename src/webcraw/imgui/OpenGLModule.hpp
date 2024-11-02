@@ -1,9 +1,6 @@
 #pragma once
 #include <spdlog/spdlog.h>
 
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
 
 // clang-tidy off
 #include <GL/glew.h> // Initialize with glewInit()

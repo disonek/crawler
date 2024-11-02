@@ -27,7 +27,7 @@ void ImGuiLogger::addSimpleLog(std::string logMessage)
     addLog("%s\n", logMessage.c_str());
 }
 
-void ImGuiLogger::addLog(const char* fmt, ...) IM_FMTARGS(2)
+void ImGuiLogger::addLog(const char* fmt, ...)
 {
     int old_size = Buf.size();
     va_list args;
