@@ -18,6 +18,5 @@ find_package(Threads REQUIRED)
 enable_testing()
 add_subdirectory(test)
 
-add_subdirectory(external/cxxopts)
 add_subdirectory(src/apps/sandbox)
 add_subdirectory(src/webcraw)

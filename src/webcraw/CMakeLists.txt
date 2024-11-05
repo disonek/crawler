@@ -28,14 +28,8 @@ target_include_directories(imgui PUBLIC ${CMAKE_SOURCE_DIR}/external/imgui/backe
 target_link_libraries(imgui PUBLIC GLEW::GLEW glfw)
 
 add_library(webcrawl
-  Crawler2.cpp
-  Crawler2.hpp
-  urls_large_data.cpp
-  urls_large_data.hpp
-  
   Crawler.hpp
   Crawler.cpp
-  Console.cpp
   WebCurl.hpp
   WebCurl.cpp
   imgui/OpenGLModule.hpp
@@ -63,7 +57,6 @@ target_link_libraries(
   webcrawl
   PUBLIC spdlog::spdlog
          Threads::Threads
-         cxxopts::cxxopts
          cpr::cpr
          LibXml2::LibXml2
          EnTT::EnTT

@@ -2,9 +2,3 @@
 	path = external/imgui
 	url = https://github.com/ocornut/imgui
 	branch = docking
-[submodule "external/cxxopts"]
-	path = external/cxxopts
-	url = https://github.com/jarro2783/cxxopts
-[submodule "external/pugixml"]
-	path = external/pugixml
-	url = https://github.com/zeux/pugixml
