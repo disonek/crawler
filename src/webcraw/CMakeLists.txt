@@ -3,7 +3,6 @@ find_package(LibXml2 REQUIRED)
 find_package(EnTT REQUIRED)
 find_package(glfw3 REQUIRED)
 find_package(GLEW REQUIRED)
-find_package(Boost REQUIRED)
 find_package(spdlog REQUIRED)
 
 
@@ -60,6 +59,5 @@ target_link_libraries(
          cpr::cpr
          LibXml2::LibXml2
          EnTT::EnTT
-         Boost::system
          imgui
 )

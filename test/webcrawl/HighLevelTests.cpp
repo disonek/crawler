@@ -33,38 +33,6 @@ public:
     }
 };
 
-// TEST(mainExample, defaultUsage)
-TEST(mainExample, DISABLED_defaultUsageAsync)
-{
-    ProtectedQueue taskQueue;
-
-    webcrawler::Crawler crawler;
-    auto crawlerResult = std::async(std::launch::async, [&taskQueue, &crawler] { crawler.run(taskQueue); });
-
-    auto guiResult = std::async(std::launch::async, [&taskQueue] {
-        img::ImGuiLayer imGuiLayer{std::make_shared<img::OpenGLModule>(), std::make_shared<img::ImGuiLogger>()};
-        imGuiLayer.intialize();
-        imGuiLayer.run(taskQueue);
-    });
-}
-
-TEST(mainExample, DISABLED_defaultUsageThread)
-{
-    ProtectedQueue taskQueue;
-
-    webcrawler::Crawler crawler;
-    img::ImGuiLayer imGuiLayer{std::make_shared<img::OpenGLModule>(), std::make_shared<img::ImGuiLogger>()};
-    std::thread crawlerThread(&webcrawler::Crawler::run, &crawler, std::ref(taskQueue));
-
-    std::thread imGuiLayerThread([&taskQueue, &imGuiLayer]() {
-        imGuiLayer.intialize();
-        imGuiLayer.run(taskQueue);
-    });
-
-    crawlerThread.join();
-    imGuiLayerThread.join();
-}
-
 TEST_F(HighLevelTest, oneIterationRunLoop)
 {
     singleGuiLoopRun();

@@ -23,3 +23,7 @@ Project supports currently Windows Os. Hovewer support for a Linux/MacOs can be 
 Error Handling<br />
 refactor, check what is to refactor (ImGuiLogger)<br />
 type link from UI - better solution than is currently<br />
+
+new
+close correctly<br />
+check if crawler makes sence<br />

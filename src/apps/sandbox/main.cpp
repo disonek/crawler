@@ -5,7 +5,7 @@
 #include "SharedObjects.hpp"
 #include "imgui/ImGuiLayer.hpp"
 
-int main(int argc, char* argv[])
+void runByAsync()
 {
     ProtectedQueue taskQueue;
 
@@ -21,4 +21,27 @@ int main(int argc, char* argv[])
 
     guiResult.get();
     crawlerResult.get();
+
+}
+
+void runByThreads()
+{
+    ProtectedQueue taskQueue;
+
+    webcrawler::Crawler crawler;
+    img::ImGuiLayer imGuiLayer{std::make_shared<img::OpenGLModule>(), std::make_shared<img::ImGuiLogger>()};
+    std::thread crawlerThread(&webcrawler::Crawler::run, &crawler, std::ref(taskQueue));
+
+    std::thread imGuiLayerThread([&taskQueue, &imGuiLayer]() {
+        imGuiLayer.intialize();
+        imGuiLayer.run(taskQueue);
+    });
+
+    crawlerThread.join();
+    imGuiLayerThread.join();
+}
+
+int main(int argc, char* argv[])
+{
+    runByThreads();
 }
