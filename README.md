@@ -1,8 +1,8 @@
 # Simple web crawler
-Project supports currently Windows Os. Hovewer support for a Linux/MacOs can be relatively easly provided.
+Project supported for Linux(Ubuntu)/Windows
 
 ## Tools needed to build 
-**msvc** compiler <br />
+**msvc/gcc/clang** compiler <br />
 **conan 2.0** package manager <br />
 **cmake** build system generator<br />
 
@@ -12,8 +12,7 @@ Project supports currently Windows Os. Hovewer support for a Linux/MacOs can be 
 ## Build steps: 
 
 1) git submodule update --init --recursive <br />
-2) mkdir build<br />
-3) cmake -B build -S . -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES="conan_provider.cmake" -DCMAKE_BUILD_TYPE="Debug" <br />
+2) cmake -B build -S . -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES="conan_provider.cmake" -DCMAKE_BUILD_TYPE="Debug" <br />
 3) cmake --build build --config Debug <br />
 
 ### More info

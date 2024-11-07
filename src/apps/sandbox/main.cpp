@@ -43,5 +43,11 @@ void runByThreads()
 
 int main(int argc, char* argv[])
 {
-    runByThreads();
+    // runByThreads();
+
+    ProtectedQueue taskQueue;
+    webcrawler::Crawler crawler;
+    auto crawlerResult = std::async(std::launch::async, [&taskQueue, &crawler] { crawler.run(taskQueue); });
+    crawlerResult.get();
+
 }
