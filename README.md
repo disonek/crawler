@@ -26,3 +26,4 @@ type link from UI - better solution than is currently<br />
 new
 close correctly<br />
 check if crawler makes sence<br />
+void runInTerminalModeTryout()<br />
