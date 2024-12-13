@@ -25,23 +25,23 @@ void Crawler::run(ProtectedQueue& taskQueue)
         if(std::nullopt != request)
         {
             std::set<std::string> initialRequests = getLinksFromUrl(request.value());
-            auto result = crawl(initialRequests);
+            auto result = crawl(initialRequests, taskQueue);
             taskQueue.pushResponse(result);
         }
     }
 }
 
-void Crawler::crawlLinksFromUrlAndPushToTaskQueue(ProtectedQueue& taskQueue, std::string url)
-{
-    utils::ScopedTimer timer(__func__, "main");
-    utils::Trace::get().beginSession("Session Name");
-
-    std::set<std::string> initialRequests = getLinksFromUrl(url);
-    auto result = crawl(initialRequests);
-    taskQueue.pushResponse(result);
-
-    utils::Trace::get().endSession();
-}
+//void Crawler::crawlLinksFromUrlAndPushToTaskQueue(ProtectedQueue& taskQueue, std::string url)
+//{
+//    utils::ScopedTimer timer(__func__, "main");
+//    utils::Trace::get().beginSession("Session Name");
+//
+//    std::set<std::string> initialRequests = getLinksFromUrl(url);
+//    auto result = crawl(initialRequests);
+//    taskQueue.pushResponse(result);
+//
+//    utils::Trace::get().endSession();
+//}
 
 std::set<std::string> Crawler::getLinksFromUrl(const std::string url)
 {
@@ -93,7 +93,7 @@ std::set<std::string> Crawler::extractLinks(std::string response, std::string ur
     return foundLinks;
 }
 
-std::set<std::string> Crawler::crawl(std::set<std::string> initialRequests)
+std::set<std::string> Crawler::crawl(std::set<std::string> initialRequests, ProtectedQueue& taskQueue)
 {
     std::set<std::string> res;
     std::copy(initialRequests.begin(), initialRequests.end(), std::back_inserter(requestsToDo));
@@ -118,6 +118,9 @@ std::set<std::string> Crawler::crawl(std::set<std::string> initialRequests)
             res.insert(crawledLinks.cbegin(), crawledLinks.cend());
         }
     }
+
+    taskQueue.ready.store(true);
+
     return res;
 }
 

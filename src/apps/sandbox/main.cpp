@@ -1,5 +1,4 @@
-
-#include <string>
+#include <iostream>
 
 #include "Crawler.hpp"
 #include "SharedObjects.hpp"
@@ -44,13 +43,22 @@ void runByThreads()
 void runInTerminalModeTryout()
 {
     ProtectedQueue taskQueue;
+    taskQueue.pushRequest("https://www.google.com/doodles");
     webcrawler::Crawler crawler;
     auto crawlerResult = std::async(std::launch::async, [&taskQueue, &crawler] { crawler.run(taskQueue); });
     crawlerResult.get();
+    auto response = taskQueue.popResponse();
+
+    if(std::nullopt != response)
+    for(auto message : response.value())
+    {
+        std::cout << message << "\n";
+    }
+
 }
 
 
 int main(int argc, char* argv[])
 {
-    runByThreads();
+    runInTerminalModeTryout();
 }
