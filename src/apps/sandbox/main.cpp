@@ -60,5 +60,5 @@ void runInTerminalModeTryout()
 
 int main(int argc, char* argv[])
 {
-    runInTerminalModeTryout();
+    runByAsync();
 }
