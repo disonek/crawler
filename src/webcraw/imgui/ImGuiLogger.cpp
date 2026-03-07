@@ -55,7 +55,7 @@ bool ImGuiLogger::draw(const char* title, bool* p_open, std::string& link)
         ImGui::EndPopup();
     }
 
-    static char str0[128] = "https://www.google.com/doodle";
+    static char str0[128] = "https://www.google.com/doodles";
     ImGui::InputText("input text", str0, IM_ARRAYSIZE(str0));
     if(ImGui::SmallButton("Crawl"))
     {
