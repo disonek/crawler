@@ -2,6 +2,10 @@ add_executable(disint_tests)
 target_sources(disint_tests 
   PRIVATE webcrawl/HighLevelTests.cpp
           webcrawl/CrawlerTests.cpp
+          webcrawl/ShutdownTests.cpp
+          webcrawl/ImGuiLoggerTests.cpp
+          webcrawl/OpenGLModuleTests.cpp
+          webcrawl/ExceptionHandlingTests.cpp
 )
 
 target_include_directories(disint_tests PRIVATE example)

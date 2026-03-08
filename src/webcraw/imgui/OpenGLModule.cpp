@@ -150,7 +150,7 @@ void OpenGLModule::createDockspace(bool& p_open)
     // any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
     if(!opt_padding)
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-    ImGui::Begin("DockSpace Demo", &p_open, window_flags);
+    ImGui::Begin("DockSpace Demo", nullptr, window_flags);  // Use nullptr to prevent close button on dockspace
     if(!opt_padding)
         ImGui::PopStyleVar();
 

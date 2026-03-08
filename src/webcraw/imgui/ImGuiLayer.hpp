@@ -15,6 +15,7 @@ public:
     ~ImGuiLayer();
     void run(ProtectedQueue& taskQueue);
     void intialize();
+    void shutdown(); // Explicitly shutdown and cleanup resources
 
 private:
     void printResultsToImGuiLogger(ProtectedQueue& taskQueue);
@@ -22,5 +23,6 @@ private:
 
     std::shared_ptr<OpenGLModule> openGLModule;
     std::shared_ptr<ImGuiLogger> logger;
+    bool isShutdown = false;
 };
 } // namespace img
