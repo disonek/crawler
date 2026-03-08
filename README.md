@@ -19,10 +19,12 @@ Project supported for Linux(Ubuntu)/Windows
  [cmake-conan](https://github.com/conan-io/cmake-conan) <br />
 
 ###TO DO: <br />
-Error Handling<br />
-refactor, check what is to refactor (ImGuiLogger)<br />
+*Error Handling<br />
+*refactor, check what is to refactor (ImGuiLogger)<br />
+*check if crawler makes sence<br />
+*void runInTerminalModeTryout()<br />
 
 new
-close correctly<br />
-check if crawler makes sence<br />
-void runInTerminalModeTryout()<br />
+*why docking is not workign <br />
+*close correctly<br />
+*update ImGui
