@@ -13,10 +13,13 @@ namespace webcrawler {
 class Crawler
 {
 public:
+    virtual ~Crawler() = default;
+
     // void crawlLinksFromUrlAndPushToTaskQueue(ProtectedQueue& taskQueue, std::string url);
 
-    std::set<std::string> getLinksFromUrl(const std::string startURL);
-    std::set<std::string> crawl(std::set<std::string> initialRequests, ProtectedQueue& taskQueue);
+    // made virtual for easier testing / subclassing
+    virtual std::set<std::string> getLinksFromUrl(const std::string startURL);
+    virtual std::set<std::string> crawl(std::set<std::string> initialRequests, ProtectedQueue& taskQueue);
     void run(ProtectedQueue& taskQueue);
 
 private:

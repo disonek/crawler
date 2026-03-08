@@ -95,6 +95,10 @@ std::set<std::string> Crawler::extractLinks(std::string response, std::string ur
 
 std::set<std::string> Crawler::crawl(std::set<std::string> initialRequests, ProtectedQueue& taskQueue)
 {
+    // reset any previous run state so that consecutive calls behave independently
+    requestsToDo.clear();
+    requestsDone.clear();
+
     std::set<std::string> res;
     std::copy(initialRequests.begin(), initialRequests.end(), std::back_inserter(requestsToDo));
 
@@ -119,7 +123,11 @@ std::set<std::string> Crawler::crawl(std::set<std::string> initialRequests, Prot
         }
     }
 
-    taskQueue.ready.store(true);
+    // don't alter the task queue ready flag here; that flag is owned by the
+    // producer/consumer code (e.g. ImGuiLayer) and is used to signal shutdown.
+    // Setting it in the middle of a crawl meant that the crawler thread would
+    // terminate after the first request, preventing subsequent requests from
+    // being processed.
 
     return res;
 }

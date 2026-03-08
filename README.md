@@ -21,7 +21,6 @@ Project supported for Linux(Ubuntu)/Windows
 ###TO DO: <br />
 Error Handling<br />
 refactor, check what is to refactor (ImGuiLogger)<br />
-type link from UI - better solution than is currently<br />
 
 new
 close correctly<br />
