@@ -19,4 +19,5 @@ enable_testing()
 add_subdirectory(test)
 
 add_subdirectory(src/apps/sandbox)
+add_subdirectory(src/apps/imgui_example)
 add_subdirectory(src/webcraw)
