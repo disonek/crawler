@@ -15,6 +15,16 @@ void ImGuiLayer::intialize()
 
 ImGuiLayer::~ImGuiLayer()
 {
+    shutdown();
+}
+
+void ImGuiLayer::shutdown()
+{
+    if(isShutdown)
+        return; // Prevent double-shutdown
+    
+    isShutdown = true;
+    logger->clear(); // Clear any remaining logs
     openGLModule->shutDown();
 }
 
@@ -35,15 +45,16 @@ void ImGuiLayer::printResultsToImGuiLogger(ProtectedQueue& taskQueue)
 
 void ImGuiLayer::run(ProtectedQueue& taskQueue)
 {
+    std::string link{};
+    bool loggerWindowOpen = true; // Persist across frames so window close state is maintained
+
     while(!openGLModule->windowShouldClose())
     {
         openGLModule->startNewFrame();
-
-        std::string link{};
-        bool run = true;
-        openGLModule->createDockspace(run);
+        bool dockspaceOpen = true; // Dockspace always open (no close button)
+        openGLModule->createDockspace(dockspaceOpen);
         printResultsToImGuiLogger(taskQueue);
-        if(logger->draw("Webcreawler", &run, link))
+        if(loggerWindowOpen && logger->draw("Webcrawler", &loggerWindowOpen, link))
         {
             taskQueue.pushRequest(link);
         }

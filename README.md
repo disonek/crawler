@@ -22,9 +22,3 @@ Project supported for Linux(Ubuntu)/Windows
 *Error Handling<br />
 *refactor, check what is to refactor (ImGuiLogger)<br />
 *check if crawler makes sence<br />
-*void runInTerminalModeTryout()<br />
-
-new
-*why docking is not workign <br />
-*close correctly<br />
-*update ImGui
