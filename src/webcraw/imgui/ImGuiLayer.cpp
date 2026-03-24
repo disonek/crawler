@@ -46,13 +46,15 @@ void ImGuiLayer::printResultsToImGuiLogger(ProtectedQueue& taskQueue)
 void ImGuiLayer::run(ProtectedQueue& taskQueue)
 {
     std::string link{};
-    bool loggerWindowOpen = true; // Persist across frames so window close state is maintained
+    bool loggerWindowOpen = false;
 
     while(!openGLModule->windowShouldClose())
     {
         openGLModule->startNewFrame();
-        bool dockspaceOpen = true; // Dockspace always open (no close button)
+        bool dockspaceOpen = true;
         openGLModule->createDockspace(dockspaceOpen);
+        openGLModule->createControlsPanel(loggerWindowOpen);
+        
         printResultsToImGuiLogger(taskQueue);
         if(loggerWindowOpen && logger->draw("Webcrawler", &loggerWindowOpen, link))
         {
