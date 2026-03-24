@@ -22,3 +22,6 @@ Project supported for Linux(Ubuntu)/Windows
 *Error Handling<br />
 *refactor, check what is to refactor (ImGuiLogger)<br />
 *check if crawler makes sence<br />
+
+NEW 
+*generate better description for 859aa2fc134f14ec2a2bd37338acc75742fca974
