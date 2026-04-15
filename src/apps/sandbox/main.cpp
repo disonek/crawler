@@ -60,5 +60,7 @@ void runInTerminalModeTryout()
 
 int main(int argc, char* argv[])
 {
+    spdlog::info("Starting main");
     runByAsync();
+    spdlog::info("Exiting main");
 }

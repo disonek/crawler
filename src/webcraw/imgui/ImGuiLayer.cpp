@@ -1,4 +1,5 @@
 #include "ImGuiLayer.hpp"
+#include <spdlog/spdlog.h>
 
 namespace img {
 
@@ -15,7 +16,10 @@ void ImGuiLayer::intialize()
 
 ImGuiLayer::~ImGuiLayer()
 {
-    shutdown();
+    if(!isShutdown)
+    {
+        shutdown();
+    }
 }
 
 void ImGuiLayer::shutdown()
@@ -25,7 +29,7 @@ void ImGuiLayer::shutdown()
     
     isShutdown = true;
     logger->clear(); // Clear any remaining logs
-    openGLModule->shutDown();
+        openGLModule->shutDown();
 }
 
 void ImGuiLayer::consumeLogs(std::set<std::string>&& messages)
@@ -62,6 +66,10 @@ void ImGuiLayer::run(ProtectedQueue& taskQueue)
         openGLModule->render();
     }
     taskQueue.ready.store(true);
+
+    spdlog::info("[GUI] Starting OpenGL shutdown in GUI thread");
+    shutdown();
+    spdlog::info("[GUI] OpenGL cleanup completed");
 }
 
 } // namespace img

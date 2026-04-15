@@ -3,7 +3,6 @@
 #include <libxml/HTMLparser.h>
 #include <libxml/uri.h>
 #include <libxml/xpath.h>
-#include <spdlog/spdlog.h>
 
 #include <future>
 
