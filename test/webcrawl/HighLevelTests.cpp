@@ -27,8 +27,10 @@ public:
         EXPECT_CALL(*module, windowShouldClose()).WillOnce(Return(false)).WillOnce(Return(true));
         EXPECT_CALL(*module, startNewFrame());
         EXPECT_CALL(*module, createDockspace(_));
+        EXPECT_CALL(*module, createControlsPanel(_));
         EXPECT_CALL(*module, render());
-        EXPECT_CALL(*logger, draw(_, _, _));
+        // logger->draw() is NOT called since window starts closed (loggerWindowOpen = false)
+        EXPECT_CALL(*logger, clear());
         EXPECT_CALL(*module, shutDown());
     }
 };

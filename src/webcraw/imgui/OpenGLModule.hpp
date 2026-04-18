@@ -20,6 +20,8 @@ public:
     virtual void render();
     virtual void shutDown();
     virtual void createDockspace(bool& run);
+    virtual void setWindowShouldClose();
+    virtual void createControlsPanel(bool& loggerWindowOpen);
 
     GLFWwindow* window;
     int screenWidth;

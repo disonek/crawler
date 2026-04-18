@@ -80,6 +80,11 @@ bool OpenGLModule::windowShouldClose()
     return glfwWindowShouldClose(window);
 }
 
+void OpenGLModule::setWindowShouldClose()
+{
+    glfwSetWindowShouldClose(window, GLFW_TRUE);
+}
+
 void OpenGLModule::startNewFrame()
 {
     glfwPollEvents();
@@ -213,6 +218,33 @@ void OpenGLModule::createDockspace(bool& p_open)
         ImGui::EndMenuBar();
     }
 
+    ImGui::End();
+}
+
+void OpenGLModule::createControlsPanel(bool& loggerWindowOpen)
+{
+    ImGui::SetNextWindowDockID(ImGui::GetID("MyDockSpace"), ImGuiCond_FirstUseEver);
+    ImGui::Begin("Controls", nullptr, ImGuiWindowFlags_NoMove);
+
+    // Disable button if window is already open
+    bool isDisabled = loggerWindowOpen;
+    if(isDisabled)
+        ImGui::BeginDisabled();
+    
+    if(ImGui::Button("Open Webcrawler", ImVec2(150, 0)))
+    {
+        loggerWindowOpen = true;
+    }
+    
+    if(isDisabled)
+        ImGui::EndDisabled();
+    
+    // Show status
+    ImGui::SameLine();
+    if(loggerWindowOpen)
+        ImGui::TextColored(ImVec4(0, 1, 0, 1), "●"); // Green dot
+    else
+        ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1), "●"); // Gray dot
     ImGui::End();
 }
 

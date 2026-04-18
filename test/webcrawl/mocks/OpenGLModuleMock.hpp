@@ -14,4 +14,6 @@ public:
     MOCK_METHOD(void, render, (), (override));
     MOCK_METHOD(void, shutDown, (), (override));
     MOCK_METHOD(void, createDockspace, (bool&), (override));
+    MOCK_METHOD(void, setWindowShouldClose, (), (override));
+    MOCK_METHOD(void, createControlsPanel, (bool&), (override));
 };
